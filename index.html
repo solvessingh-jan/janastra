@@ -5,16 +5,31 @@
   <title>Janastra</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
 
+<body>
   <h1>Janastra</h1>
 
+  <!-- Buttons -->
   <button id="waterBtn">Water Report</button>
   <button id="civicBtn">Civic Complaint</button>
 
-  <div id="content"></div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Water Report Form -->
+  <div style="margin-top:20px;">
+    <h3>Submit Water Report</h3>
+    <input id="areaInput" placeholder="Area / Locality" />
+    <br /><br />
+    <input id="statusInput" placeholder="Water status (No / Low / Normal)" />
+    <br /><br />
+    <button id="submitWater">Submit</button>
+  </div>
+
+  <!-- Output -->
+  <pre id="content" style="margin-top:20px;"></pre>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!-- App logic -->
   <script src="app.js"></script>
 </body>
 </html>
