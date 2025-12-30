@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 1. Supabase project details
   const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_...';
+  const SUPABASE_KEY = 'sb_publishable_tK95wQr1Lf4mLJQSdWHVuQ_52Mag0_5';
 
   // 2. Create Supabase client
   const supabase = window.supabase.createClient(
