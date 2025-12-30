@@ -43,30 +43,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // INSERT CIVIC COMPLAINT
-  document.getElementById('submitCivic').onclick = async () => {
-    const area = document.getElementById('civicArea').value;
-    const issue = document.getElementById('civicType').value;
-    const description = document.getElementById('civicDesc').value;
+  // CIVIC COMPLAINT SUBMIT
+document.getElementById('submitCivicBtn').onclick = async () => {
+  const area = document.getElementById('civicArea').value;
+  const category = document.getElementById('civicCategory').value;
+  const description = document.getElementById('civicDescription').value;
 
-    const { error } = await supabase
-      .from('civic_complaints')
-      .insert([
-        {
-          area,
-          issue,
-          description,
-          status: 'Open'
-        }
-      ]);
+  const { error } = await supabase
+    .from('civic_complaints')
+    .insert([
+      {
+        category: category,
+        description: `${area} - ${description}`,
+        status: 'Open'
+      }
+    ]);
 
-    const content = document.getElementById('content');
+  const content = document.getElementById('content');
 
-    if (error) {
-      content.innerText = 'Civic insert error: ' + error.message;
-    } else {
-      content.innerText = 'Civic complaint submitted successfully';
-    }
-  };
+  if (error) {
+    content.innerText = 'Civic insert error: ' + error.message;
+  } else {
+    content.innerText = 'Civic complaint submitted successfully';
+  }
+};
 
 });
