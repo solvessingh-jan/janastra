@@ -20,7 +20,8 @@
   <main class="container">
     <div class="tabs">
       <button class="tab active" data-tab="water">💧 Water</button>
-      <button class="tab" data-tab="civic">🏠 Civic</button>
+      <button class="tab" data-tab="clinics">🏥 Clinics</button>
+      <button class="tab" data-tab="reports">📊 Live Map</button>
       <button class="tab" data-tab="traffic">🚦 Traffic</button>
       <button class="tab" data-tab="scam">🚨 Scam</button>
       <button class="tab" data-tab="clinics">🏥 Clinics</button>
@@ -89,7 +90,15 @@
     </section>
 
     <div id="output" class="output">🛰️ Google Maps + Supabase ready! Click 📍 to auto-locate.</div>
-  </main>
+  <!-- LIVE REPORTS -->
+<section id="reports" class="form-section">
+  <h2>All Reports <span class="map-badge">🗺️ Live</span></h2>
+  <div id="reports-map" style="height: 450px; border-radius: 16px; background: #f1f5f9; margin: 20px 0;"></div>
+  <button class="submit-btn" onclick="loadLiveReports()">🔄 Load All Reports</button>
+</section>
+
+<div id="output" class="output">🛰️ Ready! Click 📊 Live Map to see all reports.</div>
+</main>
 
   <!-- Supabase (YOUR WORKING SETUP) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
