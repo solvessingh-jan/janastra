@@ -1,71 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Janastra - Citizen Reporting</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>Janastra AI - Hyper Civic Network</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
+  <!-- Google Maps + Futuristic APIs -->
+  <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_KEY&libraries=places&callback=initMap"></script>
 </head>
-
 <body>
-  <div class="hero">
-    <h1 class="reveal">🏛️ Janastra</h1>
-    <p class="reveal-delay">Your voice. One click. Real change.</p>
+  <!-- Neural HUD -->
+  <div class="hud">
+    <div class="status-bar">
+      <span id="location">🛰️ Locating...</span>
+      <span id="ai-status">🤖 AI Online</span>
+    </div>
   </div>
 
-  <main class="container">
-    <div class="tabs">
-      <button class="tab active" data-tab="water">💧 Water</button>
-      <button class="tab" data-tab="civic">🏠 Civic</button>
-      <button class="tab" data-tab="traffic">🚦 Traffic</button>
-      <button class="tab" data-tab="scam">🚨 Scam</button>
-      <button class="tab" data-tab="clinics">🏥 Clinics</button>
+  <!-- 3D Globe Dashboard -->
+  <div id="globe-container">
+    <canvas id="globe"></canvas>
+    <div class="globe-overlay">
+      <h1 class="neon-title">JANASTRA AI</h1>
+      <p class="neon-subtitle">Global Civic Intelligence Network</p>
+    </div>
+  </div>
+
+  <!-- Hyper Form Tabs -->
+  <main class="hyper-container">
+    <div class="neural-tabs">
+      <button class="tab neural-btn active" data-tab="water">💧 H2O</button>
+      <button class="tab neural-btn" data-tab="civic">🏠 CIVIC</button>
+      <button class="tab neural-btn" data-tab="traffic">🚦 FLOW</button>
+      <button class="tab neural-btn" data-tab="scam">🚨 THREAT</button>
+      <button class="tab neural-btn" data-tab="clinics">🏥 MED</button>
     </div>
 
-    <!-- WATER -->
-    <section id="water" class="form-section active">
-      <h2>Water Availability</h2>
-      <input id="water_area" placeholder="Enter area/locality (e.g., Karol Bagh)" />
-      <input id="water_status" placeholder="No water / Low pressure / Normal" />
-      <button class="submit-btn" onclick="submitWater()">📤 Submit Report</button>
+    <!-- Auto-filled forms with AI -->
+    <section id="water" class="hyper-form active">
+      <div class="ai-input-group">
+        <input id="water_area" placeholder="AI: Detecting location..." />
+        <button class="locate-btn" onclick="getCurrentLocation()">📍 AUTO-LOCATE</button>
+      </div>
+      <input id="water_status" placeholder="Issue severity" />
+      <button class="hyper-submit" onclick="submitWater()">🚀 TRANSMIT</button>
     </section>
 
-    <!-- CIVIC -->
-    <section id="civic" class="form-section">
-      <h2>Civic Issues</h2>
-      <input id="civic_area" placeholder="Area/Locality" />
-      <input id="civic_category" placeholder="Garbage, Streetlight, Drainage etc." />
-      <textarea id="civic_desc" placeholder="Brief description of problem" rows="3"></textarea>
-      <button class="submit-btn" onclick="submitCivic()">📤 Submit Complaint</button>
+    <!-- Other forms similar structure... -->
+    <section id="clinics" class="hyper-form">
+      <input id="clinic_area" placeholder="AI will auto-search nearby clinics" />
+      <button class="locate-btn" onclick="findNearbyClinics()">🩺 MAP SEARCH</button>
     </section>
 
-    <!-- TRAFFIC -->
-    <section id="traffic" class="form-section">
-      <h2>Traffic Updates</h2>
-      <input id="traffic_area" placeholder="Area/Road name" />
-      <input id="traffic_issue" placeholder="Traffic jam, Accident, Pothole etc." />
-      <button class="submit-btn" onclick="submitTraffic()">📤 Report Issue</button>
-    </section>
-
-    <!-- SCAM -->
-    <section id="scam" class="form-section">
-      <h2>Scam Alerts</h2>
-      <input id="scam_area" placeholder="Your area" />
-      <textarea id="scam_desc" placeholder="Call/SMS/UPI scam details" rows="3"></textarea>
-      <button class="submit-btn" onclick="submitScam()">🚨 Report Scam</button>
-    </section>
-
-    <!-- CLINICS -->
-    <section id="clinics" class="form-section">
-      <h2>Find Clinics</h2>
-      <input id="clinic_area" placeholder="Enter your area/locality" />
-      <button class="submit-btn" onclick="loadClinics()">🔍 Load Clinics Nearby</button>
-    </section>
-
-    <div id="output" class="output">Ready to help your community...</div>
+    <div id="output" class="quantum-output">Initializing neural network...</div>
   </main>
 
-  <!-- Supabase CDN -->
+  <!-- WebGL + Particles + Voice -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 </body>
