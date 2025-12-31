@@ -1,103 +1,87 @@
-document.addEventListener('DOMContentLoaded', () => {
+// ===============================
+// 1. SUPABASE CONFIG (REPLACE)
+// ===============================
+const SUPABASE_URL = "https://kjptsgmdnmjzrgetneiz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_tK95wQr1Lf4mLJQSdWHVuQ_52Mag0_5";
 
-  // ===============================
-  // SUPABASE CONFIG (CHANGE ONLY THIS)
-  // ===============================
-  const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_tK95wQr1Lf4mLJQSdWHVuQ_52Mag0_5';
+// ===============================
+// 2. CREATE CLIENT
+// ===============================
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-  const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+const output = document.getElementById("output");
 
-  // ===============================
-  // WATER REPORT
-  // Table: water_reports
-  // Columns: area, status
-  // ===============================
-  document.getElementById('submitWater').onclick = async () => {
-    const area = document.getElementById('waterArea').value;
-    const status = document.getElementById('waterStatus').value;
+// ===============================
+// 3. WATER REPORT
+// ===============================
+document.getElementById("submitWater").onclick = async () => {
+  const area = document.getElementById("waterArea").value;
+  const status = document.getElementById("waterStatus").value;
 
-    const { error } = await supabase
-      .from('water_reports')
-      .insert([{ area, status }]);
+  const { error } = await supabase
+    .from("water_reports")
+    .insert([{ area, status }]);
 
-    document.getElementById('waterResult').innerText =
-      error ? error.message : 'Water report submitted';
-  };
+  output.textContent = error ? error.message : "Water report submitted";
+};
 
-  // ===============================
-  // CIVIC COMPLAINT
-  // Table: civic_complaints
-  // Columns: category, description, status
-  // ===============================
-  document.getElementById('submitCivic').onclick = async () => {
-    const category = document.getElementById('civicCategory').value;
-    const description = document.getElementById('civicDescription').value;
+// ===============================
+// 4. CIVIC COMPLAINT
+// ===============================
+document.getElementById("submitCivic").onclick = async () => {
+  const area = document.getElementById("civicArea").value;
+  const category = document.getElementById("civicCategory").value;
+  const description = document.getElementById("civicDesc").value;
 
-    const { error } = await supabase
-      .from('civic_complaints')
-      .insert([
-        {
-          category,
-          description,
-          status: 'Open'
-        }
-      ]);
+  const { error } = await supabase
+    .from("civic_complaints")
+    .insert([{ area, category, description }]);
 
-    document.getElementById('civicResult').innerText =
-      error ? error.message : 'Civic complaint submitted';
-  };
+  output.textContent = error ? error.message : "Civic complaint submitted";
+};
 
-  // ===============================
-  // TRAFFIC / ROAD REPORT
-  // Table: traffic_reports
-  // Columns: location, issue
-  // ===============================
-  document.getElementById('submitTraffic').onclick = async () => {
-    const location = document.getElementById('trafficLocation').value;
-    const issue = document.getElementById('trafficIssue').value;
+// ===============================
+// 5. TRAFFIC REPORT
+// ===============================
+document.getElementById("submitTraffic").onclick = async () => {
+  const area = document.getElementById("trafficArea").value;
+  const issue = document.getElementById("trafficIssue").value;
 
-    const { error } = await supabase
-      .from('traffic_reports')
-      .insert([{ location, issue }]);
+  const { error } = await supabase
+    .from("traffic_reports")
+    .insert([{ area, issue }]);
 
-    document.getElementById('trafficResult').innerText =
-      error ? error.message : 'Traffic issue reported';
-  };
+  output.textContent = error ? error.message : "Traffic report submitted";
+};
 
-  // ===============================
-  // SCAM REPORT
-  // Table: scam_reports
-  // Columns: scam_type, details
-  // ===============================
-  document.getElementById('submitScam').onclick = async () => {
-    const scam_type = document.getElementById('scamType').value;
-    const details = document.getElementById('scamDetails').value;
+// ===============================
+// 6. SCAM REPORT
+// ===============================
+document.getElementById("submitScam").onclick = async () => {
+  const area = document.getElementById("scamArea").value;
+  const description = document.getElementById("scamDesc").value;
 
-    const { error } = await supabase
-      .from('scam_reports')
-      .insert([{ scam_type, details }]);
+  const { error } = await supabase
+    .from("scam_reports")
+    .insert([{ area, description }]);
 
-    document.getElementById('scamResult').innerText =
-      error ? error.message : 'Scam reported successfully';
-  };
+  output.textContent = error ? error.message : "Scam report submitted";
+};
 
-  // ===============================
-  // CLINICS (READ ONLY)
-  // Table: clinics
-  // Columns: name, area, cost_level
-  // ===============================
-  document.getElementById('loadClinics').onclick = async () => {
-    const { data, error } = await supabase
-      .from('clinics')
-      .select('*')
-      .limit(10);
+// ===============================
+// 7. CLINICS
+// ===============================
+document.getElementById("submitClinic").onclick = async () => {
+  const name = document.getElementById("clinicName").value;
+  const area = document.getElementById("clinicArea").value;
+  const type = document.getElementById("clinicType").value;
 
-    document.getElementById('clinicResult').innerText =
-      error ? error.message : JSON.stringify(data, null, 2);
-  };
+  const { error } = await supabase
+    .from("clinics")
+    .insert([{ name, area, type }]);
 
-});
+  output.textContent = error ? error.message : "Clinic added";
+};
