@@ -1,219 +1,74 @@
-// YOUR SUPABASE CREDENTIALS (hidden from UI)
+// ⚠️ REPLACE WITH YOUR SUPABASE PROJECT CREDENTIALS
 const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_tK95wQr1Lf4mLJQSdWHVuQ_52Mag0_5';
+
+// Initialize Supabase client from global CDN object
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let clinicsChannel = null;
-let mapCache = {};
-let currentPosition = null;
 
-// 🔥 IPAD-FRIENDLY GPS (High accuracy + iOS fixes)
-async function autoLocate(tabType) {
-  const output = document.getElementById('output');
-  const areaInput = document.getElementById(`${tabType}_area`);
-  
-  output.textContent = '📍 Getting precise location...';
-  
-  // iPad/iPhone GPS options
-  const gpsOptions = {
-    enableHighAccuracy: true,
-    timeout: 10000,
-    maximumAge: 60000
-  };
-  
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        currentPosition = position.coords;
-        
-        // iPad reverse geocode (Delhi focus)
-        if (!window.google) {
-          areaInput.value = 'Karol Bagh, Delhi'; // Fallback
-          output.textContent = '📍 Ready! (Maps loading...)';
-          return;
-        }
-        
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ 
-          location: { 
-            lat: currentPosition.latitude, 
-            lng: currentPosition.longitude 
-          } 
-        }, (results) => {
-          const areaName = results[0]?.address_components?.find(c => 
-            c.types.includes('locality') || 
-            c.types.includes('sublocality') || 
-            c.types.includes('neighborhood') ||
-            c.types.includes('administrative_area_level_3')
-          )?.long_name || 'Delhi Area';
-          
-          areaInput.value = areaName;
-          output.textContent = `📍 Located: ${areaName}`;
-          
-          // Show mini map
-          if (document.getElementById(`${tabType}-map`)) {
-            showMiniMap(`${tabType}-map`, currentPosition);
-          }
-        });
-      },
-      (error) => {
-        // Graceful fallback for iPad
-        output.textContent = `📍 Type your area (iPad GPS needs Safari Settings > Location > Allow)`;
-        areaInput.placeholder = 'Karol Bagh, MG Road, CP, etc.';
-      },
-      gpsOptions
-    );
-  } else {
-    output.textContent = '📍 Type your area manually';
-  }
+// Create floating particles
+const particlesContainer = document.getElementById('particles');
+for (let i = 0; i < 50; i++) {
+  const particle = document.createElement('div');
+  particle.className = 'particle';
+  particle.style.width = Math.random() * 4 + 1 + 'px';
+  particle.style.height = particle.style.width;
+  particle.style.left = Math.random() * 100 + '%';
+  particle.style.animationDelay = Math.random() * 20 + 's';
+  particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+  particlesContainer.appendChild(particle);
 }
 
-// 🗺️ Mini Maps (All tabs)
-function showMiniMap(mapId, position) {
-  const mapDiv = document.getElementById(mapId);
-  if (mapCache[mapId] || !mapDiv || !window.google) return;
-  
-  const map = new google.maps.Map(mapDiv, {
-    center: { lat: position.latitude, lng: position.longitude },
-    zoom: 16,
-    mapTypeId: 'roadmap',
-    styles: [
-      {
-        featureType: "poi",
-        elementType: "labels",
-        stylers: [{ visibility: "off" }]
-      }
-    ]
-  });
-  
-  new google.maps.Marker({
-    position: { lat: position.latitude, lng: position.longitude },
-    map: map,
-    icon: {
-      url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-      scaledSize: new google.maps.Size(32, 32)
-    },
-    title: 'Your location'
-  });
-  
-  mapCache[mapId] = map;
+// Animate stats
+function animateValue(id, start, end, duration) {
+  const obj = document.getElementById(id);
+  const range = end - start;
+  const increment = end > start ? 1 : -1;
+  const stepTime = Math.abs(Math.floor(duration / range));
+  let current = start;
+  const timer = setInterval(() => {
+    current += increment;
+    obj.textContent = current + '+';
+    if (current === end) clearInterval(timer);
+  }, stepTime);
 }
 
-// 🏥 Clinics - Google Maps (REAL data)
-async function loadClinics() {
-  const area = document.getElementById('clinic_area').value.trim();
-  const output = document.getElementById('output');
+setTimeout(() => {
+  animateValue('stat1', 0, 1250, 2000);
+  animateValue('stat2', 0, 847, 2000);
+  animateValue('stat3', 0, 3420, 2000);
+}, 1000);
 
-  if (!area) {
-    output.textContent = 'Enter area name (Karol Bagh, MG Road, etc.)';
-    return;
-  }
-
-  if (!window.google) {
-    output.textContent = 'Maps loading...';
-    return;
-  }
-
-  output.textContent = `🔍 Live search: ${area} clinics...`;
-
-  const service = new google.maps.places.PlacesService(
-    document.createElement('div')
-  );
-  
-  service.textSearch({
-    location: new google.maps.LatLng(28.6139, 77.2090), // Delhi
-    radius: '20000',
-    query: `${area} clinic hospital Delhi India`
-  }, (results, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-      const clinics = results.slice(0, 10).map(place => ({
-        name: place.name,
-        address: place.formatted_address?.split(', Delhi')[0] || place.formatted_address,
-        phone: place.formatted_phone_number || 'Call via Maps',
-        rating: place.rating ? `${place.rating}/5 (${place.user_ratings_total || 0} reviews)` : 'New'
-      }));
-
-      output.innerHTML = `🎉 **Live Results** (${clinics.length} clinics near ${area}):\n\n` + 
-        clinics.map(c => 
-          `🏥 **${c.name}**\n📍 ${c.address}\n📞 ${c.phone}\n⭐ ${c.rating}`
-        ).join('\n\n────\n\n');
-    } else {
-      output.textContent = `No clinics found. Try "Karol Bagh", "MG Road", "CP"`;
-    }
+// Tab switching with smooth animations
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const tabName = tab.dataset.tab;
+    
+    // Update active states
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+    
+    // Update output
+    document.getElementById('output').textContent = `Selected: ${tabName.toUpperCase()} tab\nReady to receive reports...`;
   });
-}
+});
 
-// ALL SUBMIT FUNCTIONS (GPS coords + no Supabase mention)
-async function submitWater() {
-  const area = document.getElementById('water_area').value.trim();
-  const status = document.getElementById('water_status').value.trim();
-  
-  if (!area || !status) return showMessage('Please fill all fields', 'error');
-  
-  await submitReport('water_reports', {
-    area, status,
-    latitude: currentPosition?.latitude,
-    longitude: currentPosition?.longitude,
-    reported_at: new Date().toISOString()
-  });
-}
-
-async function submitCivic() {
-  const area = document.getElementById('civic_area').value.trim();
-  const category = document.getElementById('civic_category').value.trim();
-  const desc = document.getElementById('civic_desc').value.trim();
-
-  if (!area || !category || !desc) return showMessage('Please fill all fields', 'error');
-
-  await submitReport('civic_issues', {
-    area, category, description: desc,
-    latitude: currentPosition?.latitude,
-    longitude: currentPosition?.longitude,
-    reported_at: new Date().toISOString()
-  });
-}
-
-async function submitTraffic() {
-  const area = document.getElementById('traffic_area').value.trim();
-  const issue = document.getElementById('traffic_issue').value.trim();
-
-  if (!area || !issue) return showMessage('Please fill all fields', 'error');
-
-  await submitReport('traffic_reports', {
-    area, issue_type: issue,
-    latitude: currentPosition?.latitude,
-    longitude: currentPosition?.longitude,
-    reported_at: new Date().toISOString()
-  });
-}
-
-async function submitScam() {
-  const area = document.getElementById('scam_area').value.trim();
-  const desc = document.getElementById('scam_desc').value.trim();
-
-  if (!area || !desc) return showMessage('Please fill all fields', 'error');
-
-  await submitReport('scam_reports', {
-    area, description: desc,
-    latitude: currentPosition?.latitude,
-    longitude: currentPosition?.longitude,
-    reported_at: new Date().toISOString()
-  });
-}
-
-// ORIGINAL submitReport (no Supabase text shown)
+// Generic submit helper with enhanced UX
 async function submitReport(tableName, data) {
   const output = document.getElementById('output');
-  const submitBtn = document.querySelector('.submit-btn');
+  const submitBtn = event.target;
   
-  output.textContent = '📤 Sending report...';
-  output.className = 'loading';
+  output.textContent = 'Submitting your report...';
+  output.className = 'output loading';
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Sending...';
+  submitBtn.textContent = 'Submitting...';
 
   try {
-    const {  result, error } = await supabaseClient
+    const { data: result, error } = await supabaseClient
       .from(tableName)
       .insert([data])
       .select()
@@ -221,58 +76,159 @@ async function submitReport(tableName, data) {
 
     if (error) throw error;
 
-    output.innerHTML = `✅ Report sent successfully!<br><strong>ID:</strong> ${result.id}<br><strong>Time:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}<br><br>Thank you for helping your community! 🙏`;
-    output.className = 'success';
+    output.textContent = `✅ Success! Your ${tableName.replace('_', ' ')} report has been submitted.\n\nID: ${result.id}\nTime: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}\n\nThank you for helping your community!`;
+    output.className = 'output success';
     
     // Clear form
     document.querySelectorAll('input, textarea').forEach(input => input.value = '');
     
   } catch (error) {
-    output.textContent = `❌ Failed to send: ${error.message}`;
-    output.className = 'error';
+    output.textContent = `❌ Error: ${error.message}\n\nPlease check your connection and try again.`;
+    output.className = 'output error';
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = '📤 Submit Report';
   }
 }
 
+// Water report
+async function submitWater() {
+  const area = document.getElementById('water_area').value.trim();
+  const status = document.getElementById('water_status').value.trim();
+  
+  if (!area || !status) {
+    showMessage('Please fill all fields', 'error');
+    return;
+  }
+
+  await submitReport('water_reports', {
+    area,
+    status,
+    reported_at: new Date().toISOString()
+  });
+}
+
+// Civic complaint
+async function submitCivic() {
+  const area = document.getElementById('civic_area').value.trim();
+  const category = document.getElementById('civic_category').value.trim();
+  const desc = document.getElementById('civic_desc').value.trim();
+
+  if (!area || !category || !desc) {
+    showMessage('Please fill all fields', 'error');
+    return;
+  }
+
+  await submitReport('civic_issues', {
+    area,
+    category,
+    description: desc,
+    reported_at: new Date().toISOString()
+  });
+}
+
+// Traffic report
+async function submitTraffic() {
+  const area = document.getElementById('traffic_area').value.trim();
+  const issue = document.getElementById('traffic_issue').value.trim();
+
+  if (!area || !issue) {
+    showMessage('Please fill all fields', 'error');
+    return;
+  }
+
+  await submitReport('traffic_reports', {
+    area,
+    issue_type: issue,
+    reported_at: new Date().toISOString()
+  });
+}
+
+// Scam report
+async function submitScam() {
+  const area = document.getElementById('scam_area').value.trim();
+  const desc = document.getElementById('scam_desc').value.trim();
+
+  if (!area || !desc) {
+    showMessage('Please fill all fields', 'error');
+    return;
+  }
+
+  await submitReport('scam_reports', {
+    area,
+    description: desc,
+    reported_at: new Date().toISOString()
+  });
+}
+
+// Load clinics with realtime updates
+async function loadClinics() {
+  const area = document.getElementById('clinic_area').value.trim();
+  const output = document.getElementById('output');
+
+  if (!area) {
+    showMessage('Please enter your area', 'error');
+    return;
+  }
+
+  output.textContent = '🔍 Searching for clinics nearby...';
+  output.className = 'output loading';
+
+  // Unsubscribe previous channel
+  if (clinicsChannel) {
+    supabaseClient.removeChannel(clinicsChannel);
+  }
+
+  // Fetch clinics
+  const { data, error } = await supabaseClient
+    .from('clinics')
+    .select('id, name, address, phone, specialty')
+    .ilike('area', `%${area}%`)
+    .order('name', { ascending: true });
+
+  if (error) {
+    output.textContent = `❌ Error: ${error.message}`;
+    output.className = 'output error';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    output.textContent = `No clinics found in "${area}".\n\nTry a nearby area or add one!`;
+    output.className = 'output';
+    return;
+  }
+
+  // Display clinics in beautiful format
+  const clinicsList = data.map(clinic => 
+    `🏥 ${clinic.name}\n📍 ${clinic.address}\n📞 ${clinic.phone || 'N/A'}\n${clinic.specialty ? `🔧 ${clinic.specialty}` : ''}`
+  ).join('\n\n───\n\n');
+
+  output.textContent = `Found ${data.length} clinic(s) in "${area}":\n\n${clinicsList}`;
+  output.className = 'output success';
+
+  // Realtime subscription for new clinics
+  clinicsChannel = supabaseClient
+    .channel('clinics')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'clinics',
+      filter: `area=ilike.${area}%`
+    }, (payload) => {
+      output.textContent += `\n\n✨ **New clinic added realtime!**\n🏥 ${payload.new.name}`;
+    })
+    .subscribe();
+}
+
+// Utility function for quick messages
 function showMessage(message, type = 'error') {
   const output = document.getElementById('output');
   output.textContent = message;
-  output.className = type;
+  output.className = 'output ' + type;
 }
 
-// Tab switching (original)
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    const tabName = tab.dataset.tab;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tabName).classList.add('active');
-    document.getElementById('output').textContent = `Selected ${tabName.toUpperCase()}\nReady! 📍 Click Locate or type area.`;
-  });
+// Auto-focus first input on tab change
+document.addEventListener('DOMContentLoaded', () => {
+  const firstInput = document.querySelector('#water input');
+  if (firstInput) firstInput.focus();
 });
-
-// iPad Maps init
-function initGoogleMaps() {
-  console.log('✅ Google Maps ready for iPad!');
-}
-// LIVE REPORTS MAP
-async function loadLiveReports() {
-  const output = document.getElementById('output');
-  output.textContent = '🗺️ Loading live reports map...';
-  
-  if (!window.google) {
-    output.textContent = 'Maps loading...';
-    return;
-  }
-  
-  const mapDiv = document.getElementById('reports-map');
-  const map = new google.maps.Map(mapDiv, {
-    center: { lat: 28.6139, lng: 77.2090 },
-    zoom: 11
-  });
-  
-  // Water reports (RED dots)
-  const { data
