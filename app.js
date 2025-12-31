@@ -258,3 +258,21 @@ document.querySelectorAll('.tab').forEach(tab => {
 function initGoogleMaps() {
   console.log('✅ Google Maps ready for iPad!');
 }
+// LIVE REPORTS MAP
+async function loadLiveReports() {
+  const output = document.getElementById('output');
+  output.textContent = '🗺️ Loading live reports map...';
+  
+  if (!window.google) {
+    output.textContent = 'Maps loading...';
+    return;
+  }
+  
+  const mapDiv = document.getElementById('reports-map');
+  const map = new google.maps.Map(mapDiv, {
+    center: { lat: 28.6139, lng: 77.2090 },
+    zoom: 11
+  });
+  
+  // Water reports (RED dots)
+  const { data
