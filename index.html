@@ -2,109 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Janastra - Smart Civic Reporting</title>
+  <title>Janastra - Citizen Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#3b82f6">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="application/manifest+json;base64,W29iamVjdCB7Im5hbWUiOiJKYW5hc3RyYSIsInNob3J0X25hbWUiOiJKYW5hc3RyYSIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwidGhlbWVfY29sb3IiOiIjM2I4MmY2In0=">
   <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
+  <div class="particles" id="particles"></div>
+
   <div class="hero">
-    <h1 class="reveal">Janastra</h1>
-    <p class="reveal-delay">BY Ravit</p>
+    <div class="hero-glass"></div>
+    <div class="hero-content">
+      <h1>🏛️ Janastra</h1>
+      <p>Your voice. One click. Real change.</p>
+      <button class="cta-btn" onclick="document.querySelector('.container').scrollIntoView({behavior: 'smooth'})">
+        <span style="position: relative; z-index: 1;">Start Reporting</span>
+      </button>
+    </div>
+    <div class="scroll-indicator">
+      <svg width="30" height="50" viewBox="0 0 30 50">
+        <rect x="5" y="5" width="20" height="40" rx="10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <circle cx="15" cy="15" r="3" fill="rgba(255,255,255,0.8)">
+          <animate attributeName="cy" from="15" to="30" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
   </div>
 
   <main class="container">
+    <h2 class="section-title">Report. Track. Transform.</h2>
+
     <div class="tabs">
-      <button class="tab active" data-tab="water">💧Water</button>
-      <button class="tab" data-tab="reports">📊 Live Map</button>
+      <button class="tab active" data-tab="water">💧 Water</button>
+      <button class="tab" data-tab="civic">🏠 Civic</button>
       <button class="tab" data-tab="traffic">🚦 Traffic</button>
       <button class="tab" data-tab="scam">🚨 Scam</button>
       <button class="tab" data-tab="clinics">🏥 Clinics</button>
     </div>
 
-    <!-- WATER -->
     <section id="water" class="form-section active">
-      <h2>Water Issues <span class="map-badge">🗺️ Live Map</span></h2>
-      <div class="map-input-group">
-        <input id="water_area" placeholder="📍 Auto-locate or type area" />
-        <button class="locate-btn" onclick="autoLocate('water')">📍 Locate</button>
+      <h2>Water Availability</h2>
+      <div class="input-group">
+        <input id="water_area" placeholder="Enter area/locality (e.g., Karol Bagh)" />
       </div>
-      <input id="water_status" placeholder="No water / Low pressure / Normal" />
-      <button class="submit-btn" onclick="submitWater()">📤 Submit + Save Location</button>
-      <button class="whatsapp-btn" onclick="shareWhatsApp('water')" style="background: #25D366; margin-top: 10px; padding: 16px;">📱 WhatsApp</button>
-
-      <div id="water-map" class="mini-map"></div>
+      <div class="input-group">
+        <input id="water_status" placeholder="No water / Low pressure / Normal" />
+      </div>
+      <button class="submit-btn" onclick="submitWater()">📤 Submit Report</button>
     </section>
 
-    <!-- CIVIC -->
     <section id="civic" class="form-section">
-      <h2>Civic Issues <span class="map-badge">🗺️ Live Map</span></h2>
-      <div class="map-input-group">
-        <input id="civic_area" placeholder="📍 Area/Locality" />
-        <button class="locate-btn" onclick="autoLocate('civic')">📍 Locate</button>
+      <h2>Civic Issues</h2>
+      <div class="input-group">
+        <input id="civic_area" placeholder="Area/Locality" />
       </div>
-      <input id="civic_category" placeholder="Garbage, Streetlight, Drainage" />
-      <button class="submit-btn" onclick="submitCivic()">
-      <button class="submit-btn" onclick="submitCivic()">📤 Report Issue</button>
-      <div id="civic-map" class="mini-map"></div>
+      <div class="input-group">
+        <input id="civic_category" placeholder="Garbage, Streetlight, Drainage etc." />
+      </div>
+      <div class="input-group">
+        <textarea id="civic_desc" placeholder="Brief description of problem" rows="3"></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitCivic()">📤 Submit Complaint</button>
     </section>
 
-    <!-- TRAFFIC -->
     <section id="traffic" class="form-section">
-      <h2>Traffic <span class="map-badge">🗺️ Live Map</span></h2>
-      <div class="map-input-group">
-        <input id="traffic_area" placeholder="📍 Road/Highway name" />
-        <button class="locate-btn" onclick="autoLocate('traffic')">📍 Locate</button>
+      <h2>Traffic Updates</h2>
+      <div class="input-group">
+        <input id="traffic_area" placeholder="Area/Road name" />
       </div>
-      <input id="traffic_issue" placeholder="Jam, Accident, Pothole, Signal" />
-      <button class="submit-btn" onclick="submitTraffic()">🚦 Report Traffic</button>
-      <div id="traffic-map" class="mini-map"></div>
+      <div class="input-group">
+        <input id="traffic_issue" placeholder="Traffic jam, Accident, Pothole etc." />
+      </div>
+      <button class="submit-btn" onclick="submitTraffic()">📤 Report Issue</button>
     </section>
 
-    <!-- SCAM -->
     <section id="scam" class="form-section">
-      <h2>Scam Alerts <span class="map-badge">🗺️ Live Map</span></h2>
-      <div class="map-input-group">
-        <input id="scam_area" placeholder="📍 Your area/locality" />
-        <button class="locate-btn" onclick="autoLocate('scam')">📍 Locate</button>
+      <h2>Scam Alerts</h2>
+      <div class="input-group">
+        <input id="scam_area" placeholder="Your area" />
       </div>
-      <textarea id="scam_desc" placeholder="UPI scam, fake call, SMS details" rows="3"></textarea>
-      <button class="submit-btn" onclick="submitScam()">🚨 Alert Community</button>
-      <div id="scam-map" class="mini-map"></div>
+      <div class="input-group">
+        <textarea id="scam_desc" placeholder="Call/SMS/UPI scam details" rows="3"></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitScam()">🚨 Report Scam</button>
     </section>
 
-    <!-- CLINICS -->
     <section id="clinics" class="form-section">
-      <h2>Clinics <span class="map-badge">🗺️ Live Map</span></h2>
-      <div class="map-input-group">
-        <input id="clinic_area" placeholder="📍 Search clinics near..." />
-        <button class="locate-btn" onclick="autoLocate('clinics')">📍 My Location</button>
+      <h2>Find Clinics</h2>
+      <div class="input-group">
+        <input id="clinic_area" placeholder="Enter your area/locality" />
       </div>
-      <button class="submit-btn" onclick="loadClinics()">🏥 Find Clinics Nearby</button>
-      <div id="clinics-map" class="mini-map"></div>
+      <button class="submit-btn" onclick="loadClinics()">🔍 Load Clinics Nearby</button>
     </section>
 
-    <div id="output" class="output">🛰️ Google Maps + Supabase ready! Click 📍 to auto-locate.</div>
-  <!-- LIVE REPORTS -->
-<section id="reports" class="form-section">
-  <h2>All Reports <span class="map-badge">🗺️ Live</span></h2>
-  <div id="reports-map" style="height: 450px; border-radius: 16px; background: #f1f5f9; margin: 20px 0;"></div>
-  <button class="submit-btn" onclick="loadLiveReports()">🔄 Load All Reports</button>
-</section>
+    <div id="output" class="output">Ready to help your community...</div>
 
-<div id="output" class="output">🛰️ Ready! Click 📊 Live Map to see all reports.</div>
-</main>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="stat1">0</div>
+        <div class="stat-label">Reports Submitted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat2">0</div>
+        <div class="stat-label">Issues Resolved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat3">0</div>
+        <div class="stat-label">Active Citizens</div>
+      </div>
+    </div>
+  </main>
 
-  <!-- Supabase (YOUR WORKING SETUP) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <!-- Google Maps Complete (Maps + Places + Geocoding) -->
-  <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_KEY&libraries=places,geometry&callback=initAllMaps"></script>
-  
   <script src="app.js"></script>
 </body>
 </html>
