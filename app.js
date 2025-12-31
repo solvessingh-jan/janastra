@@ -1,6 +1,6 @@
 // YOUR SUPABASE CREDENTIALS (hidden from UI)
 const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
-const SUPABASE_ANON_KEY = 'sbp_publishable_tK95wQr1Lf4mLJQSdWHVuQ52Mag05';
+const SUPABASE_ANON_KEY = 'sb_publishable_tK95wQr1Lf4mLJQSdWHVuQ_52Mag0_5';
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
