@@ -4,8 +4,12 @@
   <meta charset="UTF-8" />
   <title>Janastra - Smart Civic Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="application/manifest+json;base64,W29iamVjdCB7Im5hbWUiOiJKYW5hc3RyYSIsInNob3J0X25hbWUiOiJKYW5hc3RyYSIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwidGhlbWVfY29sb3IiOiIjM2I4MmY2In0=">
   <link rel="stylesheet" href="style.css">
 </head>
+
 
 <body>
   <div class="hero">
@@ -31,6 +35,8 @@
       </div>
       <input id="water_status" placeholder="No water / Low pressure / Normal" />
       <button class="submit-btn" onclick="submitWater()">📤 Submit + Save Location</button>
+      <button class="whatsapp-btn" onclick="shareWhatsApp('water')" style="background: #25D366; margin-top: 10px; padding: 16px;">📱 WhatsApp</button>
+
       <div id="water-map" class="mini-map"></div>
     </section>
 
@@ -42,7 +48,7 @@
         <button class="locate-btn" onclick="autoLocate('civic')">📍 Locate</button>
       </div>
       <input id="civic_category" placeholder="Garbage, Streetlight, Drainage" />
-      <textarea id="civic_desc" placeholder="Describe problem" rows="3"></textarea>
+      <button class="submit-btn" onclick="submitCivic()">
       <button class="submit-btn" onclick="submitCivic()">📤 Report Issue</button>
       <div id="civic-map" class="mini-map"></div>
     </section>
