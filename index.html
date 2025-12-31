@@ -2,101 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Janastra</title>
+  <title>Janastra - Citizen Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      max-width: 720px;
-      margin: 40px auto;
-      padding: 0 16px;
-    }
-    h1 { margin-bottom: 8px; }
-    h2 { margin-top: 32px; }
-    input, button {
-      display: block;
-      margin: 8px 0;
-      padding: 10px;
-      width: 100%;
-      max-width: 420px;
-    }
-    button {
-      border-radius: 20px;
-      border: none;
-      background: #e9f0ff;
-      cursor: pointer;
-    }
-    .tabs button {
-      display: inline-block;
-      width: auto;
-      margin-right: 6px;
-    }
-    #output {
-      white-space: pre-wrap;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <div class="hero">
+    <h1 class="reveal">🏛️ Janastra</h1>
+    <p class="reveal-delay">Your voice. One click. Real change.</p>
+  </div>
 
-<h1>Janastra</h1>
+  <main class="container">
+    <div class="tabs">
+      <button class="tab active" data-tab="water">💧 Water</button>
+      <button class="tab" data-tab="civic">🏠 Civic</button>
+      <button class="tab" data-tab="traffic">🚦 Traffic</button>
+      <button class="tab" data-tab="scam">🚨 Scam</button>
+      <button class="tab" data-tab="clinics">🏥 Clinics</button>
+    </div>
 
-<div class="tabs">
-  <button onclick="show('water')">Water</button>
-  <button onclick="show('civic')">Civic</button>
-  <button onclick="show('traffic')">Traffic</button>
-  <button onclick="show('scam')">Scam</button>
-  <button onclick="show('clinics')">Clinics</button>
-</div>
+    <!-- WATER -->
+    <section id="water" class="form-section active">
+      <h2>Water Availability</h2>
+      <input id="water_area" placeholder="Enter area/locality (e.g., Karol Bagh)" />
+      <input id="water_status" placeholder="No water / Low pressure / Normal" />
+      <button class="submit-btn" onclick="submitWater()">📤 Submit Report</button>
+    </section>
 
-<!-- WATER -->
-<section id="water">
-  <h2>Water availability</h2>
-  <input id="water_area" placeholder="Area / Locality" />
-  <input id="water_status" placeholder="No / Low / Normal" />
-  <button onclick="submitWater()">Submit water report</button>
-</section>
+    <!-- CIVIC -->
+    <section id="civic" class="form-section">
+      <h2>Civic Issues</h2>
+      <input id="civic_area" placeholder="Area/Locality" />
+      <input id="civic_category" placeholder="Garbage, Streetlight, Drainage etc." />
+      <textarea id="civic_desc" placeholder="Brief description of problem" rows="3"></textarea>
+      <button class="submit-btn" onclick="submitCivic()">📤 Submit Complaint</button>
+    </section>
 
-<!-- CIVIC -->
-<section id="civic" hidden>
-  <h2>Civic complaint</h2>
-  <input id="civic_area" placeholder="Area / Locality" />
-  <input id="civic_category" placeholder="Garbage / Streetlight" />
-  <input id="civic_desc" placeholder="Short description" />
-  <button onclick="submitCivic()">Submit civic complaint</button>
-</section>
+    <!-- TRAFFIC -->
+    <section id="traffic" class="form-section">
+      <h2>Traffic Updates</h2>
+      <input id="traffic_area" placeholder="Area/Road name" />
+      <input id="traffic_issue" placeholder="Traffic jam, Accident, Pothole etc." />
+      <button class="submit-btn" onclick="submitTraffic()">📤 Report Issue</button>
+    </section>
 
-<!-- TRAFFIC -->
-<section id="traffic" hidden>
-  <h2>Traffic issue</h2>
-  <input id="traffic_area" placeholder="Area" />
-  <input id="traffic_issue" placeholder="Jam / Accident / Pothole" />
-  <button onclick="submitTraffic()">Submit traffic report</button>
-</section>
+    <!-- SCAM -->
+    <section id="scam" class="form-section">
+      <h2>Scam Alerts</h2>
+      <input id="scam_area" placeholder="Your area" />
+      <textarea id="scam_desc" placeholder="Call/SMS/UPI scam details" rows="3"></textarea>
+      <button class="submit-btn" onclick="submitScam()">🚨 Report Scam</button>
+    </section>
 
-<!-- SCAM -->
-<section id="scam" hidden>
-  <h2>Scam report</h2>
-  <input id="scam_area" placeholder="Area" />
-  <input id="scam_desc" placeholder="Call / SMS / UPI scam" />
-  <button onclick="submitScam()">Submit scam report</button>
-</section>
+    <!-- CLINICS -->
+    <section id="clinics" class="form-section">
+      <h2>Find Clinics</h2>
+      <input id="clinic_area" placeholder="Enter your area/locality" />
+      <button class="submit-btn" onclick="loadClinics()">🔍 Load Clinics Nearby</button>
+    </section>
 
-<!-- CLINICS -->
-<section id="clinics" hidden>
-  <h2>Find clinics</h2>
-  <input id="clinic_area" placeholder="Area" />
-  <button onclick="loadClinics()">Load clinics</button>
-</section>
+    <div id="output" class="output">Ready to help your community...</div>
+  </main>
 
-<div id="output"></div>
-
-<!-- ✅ CORRECT SUPABASE SCRIPT (DO NOT CHANGE) -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="app.js"></script>
-
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
 </body>
 </html>
