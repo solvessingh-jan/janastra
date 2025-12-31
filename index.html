@@ -1,23 +1,184 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Janastra</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: #111;
+      line-height: 1.4;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 4rem 1.5rem;
+      max-width: 720px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.05rem;
+      color: #444;
+      margin-bottom: 2rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .btn {
+      width: fit-content;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .btn:hover {
+      background: #eaeaea;
+    }
+
+    .divider {
+      height: 1px;
+      background: #eee;
+      margin: 4rem 0;
+    }
+
+    .result {
+      font-size: 0.9rem;
+      color: #555;
+      white-space: pre-wrap;
+      margin-top: 1rem;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      background: rgba(255,255,255,0.9);
+      padding: 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #eee;
+    }
+
+    .nav a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      color: #111;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: #f3f3f3;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Janastra</h1>
 
-  <button id="waterBtn">Water Report</button>
-  <button id="civicBtn">Civic Complaint</button>
+  <!-- HERO -->
+  <section>
+    <h1>Your city, honestly.</h1>
+    <p>
+      Janastra lets people quietly report what they experience every day —
+      water issues, roads, scams, healthcare access.
+    </p>
+  </section>
 
-  <div id="content"></div>
+  <!-- WATER -->
+  <section id="water">
+    <h2>Water availability</h2>
+    <input id="waterArea" placeholder="Area / Locality" />
+    <input id="waterStatus" placeholder="Status (No / Low / Irregular)" />
+    <button id="submitWater" class="btn">Submit water report</button>
+    <div id="waterResult" class="result"></div>
+  </section>
 
-  <!-- SUPABASE CDN -->
+  <!-- CIVIC -->
+  <section id="civic">
+    <h2>Civic complaint</h2>
+    <input id="civicCategory" placeholder="Issue (Garbage / Drain / Light)" />
+    <input id="civicDescription" placeholder="Short description" />
+    <button id="submitCivic" class="btn">Submit civic complaint</button>
+    <div id="civicResult" class="result"></div>
+  </section>
+
+  <!-- TRAFFIC -->
+  <section id="traffic">
+    <h2>Traffic & road issues</h2>
+    <input id="trafficLocation" placeholder="Road / Area" />
+    <input id="trafficIssue" placeholder="Issue (Traffic / Pothole / Accident)" />
+    <button id="submitTraffic" class="btn">Submit traffic report</button>
+    <div id="trafficResult" class="result"></div>
+  </section>
+
+  <!-- SCAM -->
+  <section id="scam">
+    <h2>Digital scam report</h2>
+    <input id="scamType" placeholder="Scam type (Call / SMS / UPI)" />
+    <input id="scamDetails" placeholder="What happened?" />
+    <button id="submitScam" class="btn">Report scam</button>
+    <div id="scamResult" class="result"></div>
+  </section>
+
+  <!-- CLINICS -->
+  <section id="clinics">
+    <h2>Affordable healthcare</h2>
+    <p>
+      This section will list nearby affordable clinics and government facilities.
+    </p>
+    <button id="loadClinics" class="btn">Load nearby clinics</button>
+    <div id="clinicResult" class="result"></div>
+  </section>
+
+  <!-- NAV -->
+  <div class="nav">
+    <a href="#water">Water</a>
+    <a href="#civic">Civic</a>
+    <a href="#traffic">Traffic</a>
+    <a href="#scam">Scam</a>
+    <a href="#clinics">Clinics</a>
+  </div>
+
+  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- APP LOGIC -->
   <script src="app.js"></script>
+
 </body>
 </html>
