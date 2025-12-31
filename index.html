@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Janastra - Citizen Reporting</title>
+  <title>Janastra - Smart Civic Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="hero">
-    <h1 class="reveal">🏛️ Janastra</h1>
-    <p class="reveal-delay">Your voice. One click. Real change.</p>
+    <h1 class="reveal">🏛️ Janastra AI</h1>
+    <p class="reveal-delay">Live Google Maps + Smart Civic Reporting</p>
   </div>
 
   <main class="container">
@@ -24,52 +24,72 @@
 
     <!-- WATER -->
     <section id="water" class="form-section active">
-      <h2>Water Availability</h2>
-      <input id="water_area" placeholder="Enter area/locality (e.g., Karol Bagh)" />
+      <h2>Water Issues <span class="map-badge">🗺️ Live Map</span></h2>
+      <div class="map-input-group">
+        <input id="water_area" placeholder="📍 Auto-locate or type area" />
+        <button class="locate-btn" onclick="autoLocate('water')">📍 Locate</button>
+      </div>
       <input id="water_status" placeholder="No water / Low pressure / Normal" />
-      <button class="submit-btn" onclick="submitWater()">📤 Submit Report</button>
+      <button class="submit-btn" onclick="submitWater()">📤 Submit + Save Location</button>
+      <div id="water-map" class="mini-map"></div>
     </section>
 
     <!-- CIVIC -->
     <section id="civic" class="form-section">
-      <h2>Civic Issues</h2>
-      <input id="civic_area" placeholder="Area/Locality" />
-      <input id="civic_category" placeholder="Garbage, Streetlight, Drainage etc." />
-      <textarea id="civic_desc" placeholder="Brief description of problem" rows="3"></textarea>
-      <button class="submit-btn" onclick="submitCivic()">📤 Submit Complaint</button>
+      <h2>Civic Issues <span class="map-badge">🗺️ Live Map</span></h2>
+      <div class="map-input-group">
+        <input id="civic_area" placeholder="📍 Area/Locality" />
+        <button class="locate-btn" onclick="autoLocate('civic')">📍 Locate</button>
+      </div>
+      <input id="civic_category" placeholder="Garbage, Streetlight, Drainage" />
+      <textarea id="civic_desc" placeholder="Describe problem" rows="3"></textarea>
+      <button class="submit-btn" onclick="submitCivic()">📤 Report Issue</button>
+      <div id="civic-map" class="mini-map"></div>
     </section>
 
     <!-- TRAFFIC -->
     <section id="traffic" class="form-section">
-      <h2>Traffic Updates</h2>
-      <input id="traffic_area" placeholder="Area/Road name" />
-      <input id="traffic_issue" placeholder="Traffic jam, Accident, Pothole etc." />
-      <button class="submit-btn" onclick="submitTraffic()">📤 Report Issue</button>
+      <h2>Traffic <span class="map-badge">🗺️ Live Map</span></h2>
+      <div class="map-input-group">
+        <input id="traffic_area" placeholder="📍 Road/Highway name" />
+        <button class="locate-btn" onclick="autoLocate('traffic')">📍 Locate</button>
+      </div>
+      <input id="traffic_issue" placeholder="Jam, Accident, Pothole, Signal" />
+      <button class="submit-btn" onclick="submitTraffic()">🚦 Report Traffic</button>
+      <div id="traffic-map" class="mini-map"></div>
     </section>
 
     <!-- SCAM -->
     <section id="scam" class="form-section">
-      <h2>Scam Alerts</h2>
-      <input id="scam_area" placeholder="Your area" />
-      <textarea id="scam_desc" placeholder="Call/SMS/UPI scam details" rows="3"></textarea>
-      <button class="submit-btn" onclick="submitScam()">🚨 Report Scam</button>
+      <h2>Scam Alerts <span class="map-badge">🗺️ Live Map</span></h2>
+      <div class="map-input-group">
+        <input id="scam_area" placeholder="📍 Your area/locality" />
+        <button class="locate-btn" onclick="autoLocate('scam')">📍 Locate</button>
+      </div>
+      <textarea id="scam_desc" placeholder="UPI scam, fake call, SMS details" rows="3"></textarea>
+      <button class="submit-btn" onclick="submitScam()">🚨 Alert Community</button>
+      <div id="scam-map" class="mini-map"></div>
     </section>
 
     <!-- CLINICS -->
     <section id="clinics" class="form-section">
-      <h2>Find Clinics</h2>
-      <input id="clinic_area" placeholder="Enter your area/locality" />
-      <button class="submit-btn" onclick="loadClinics()">🔍 Load Clinics Nearby</button>
+      <h2>Clinics <span class="map-badge">🗺️ Live Map</span></h2>
+      <div class="map-input-group">
+        <input id="clinic_area" placeholder="📍 Search clinics near..." />
+        <button class="locate-btn" onclick="autoLocate('clinics')">📍 My Location</button>
+      </div>
+      <button class="submit-btn" onclick="loadClinics()">🏥 Find Clinics Nearby</button>
+      <div id="clinics-map" class="mini-map"></div>
     </section>
 
-    <div id="output" class="output">Ready to help your community...</div>
+    <div id="output" class="output">🛰️ Google Maps + Supabase ready! Click 📍 to auto-locate.</div>
   </main>
 
-  <!-- Supabase CDN -->
+  <!-- Supabase (YOUR WORKING SETUP) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- Google Maps Places API (REAL clinic data) -->
-  <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_KEY&libraries=places"></script>
+  <!-- Google Maps Complete (Maps + Places + Geocoding) -->
+  <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_KEY&libraries=places,geometry&callback=initAllMaps"></script>
   
   <script src="app.js"></script>
 </body>
