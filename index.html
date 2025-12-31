@@ -3,56 +3,99 @@
 <head>
   <meta charset="UTF-8" />
   <title>Janastra</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+    h1 { margin-bottom: 8px; }
+    h2 { margin-top: 32px; }
+    input, button {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      width: 100%;
+      max-width: 420px;
+    }
+    button {
+      border-radius: 20px;
+      border: none;
+      background: #e9f0ff;
+      cursor: pointer;
+    }
+    .tabs button {
+      display: inline-block;
+      width: auto;
+      margin-right: 6px;
+    }
+    #output {
+      white-space: pre-wrap;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
 
 <h1>Janastra</h1>
 
-<hr>
+<div class="tabs">
+  <button onclick="show('water')">Water</button>
+  <button onclick="show('civic')">Civic</button>
+  <button onclick="show('traffic')">Traffic</button>
+  <button onclick="show('scam')">Scam</button>
+  <button onclick="show('clinics')">Clinics</button>
+</div>
 
-<h2>Submit Water Report</h2>
-<input id="waterArea" placeholder="Area / Locality" />
-<input id="waterStatus" placeholder="Water status (No / Low / Normal)" />
-<button id="submitWater">Submit Water Report</button>
+<!-- WATER -->
+<section id="water">
+  <h2>Water availability</h2>
+  <input id="water_area" placeholder="Area / Locality" />
+  <input id="water_status" placeholder="No / Low / Normal" />
+  <button onclick="submitWater()">Submit water report</button>
+</section>
 
-<hr>
+<!-- CIVIC -->
+<section id="civic" hidden>
+  <h2>Civic complaint</h2>
+  <input id="civic_area" placeholder="Area / Locality" />
+  <input id="civic_category" placeholder="Garbage / Streetlight" />
+  <input id="civic_desc" placeholder="Short description" />
+  <button onclick="submitCivic()">Submit civic complaint</button>
+</section>
 
-<h2>Submit Civic Complaint</h2>
-<input id="civicArea" placeholder="Area / Locality" />
-<input id="civicCategory" placeholder="Issue (Garbage / Streetlight)" />
-<input id="civicDesc" placeholder="Short description" />
-<button id="submitCivic">Submit Civic Complaint</button>
+<!-- TRAFFIC -->
+<section id="traffic" hidden>
+  <h2>Traffic issue</h2>
+  <input id="traffic_area" placeholder="Area" />
+  <input id="traffic_issue" placeholder="Jam / Accident / Pothole" />
+  <button onclick="submitTraffic()">Submit traffic report</button>
+</section>
 
-<hr>
+<!-- SCAM -->
+<section id="scam" hidden>
+  <h2>Scam report</h2>
+  <input id="scam_area" placeholder="Area" />
+  <input id="scam_desc" placeholder="Call / SMS / UPI scam" />
+  <button onclick="submitScam()">Submit scam report</button>
+</section>
 
-<h2>Submit Traffic Report</h2>
-<input id="trafficArea" placeholder="Area / Locality" />
-<input id="trafficIssue" placeholder="Traffic issue" />
-<button id="submitTraffic">Submit Traffic Report</button>
+<!-- CLINICS -->
+<section id="clinics" hidden>
+  <h2>Find clinics</h2>
+  <input id="clinic_area" placeholder="Area" />
+  <button onclick="loadClinics()">Load clinics</button>
+</section>
 
-<hr>
+<div id="output"></div>
 
-<h2>Report a Scam</h2>
-<input id="scamArea" placeholder="Area / Platform" />
-<input id="scamDesc" placeholder="Scam description" />
-<button id="submitScam">Submit Scam Report</button>
-
-<hr>
-
-<h2>Add Clinic</h2>
-<input id="clinicName" placeholder="Clinic name" />
-<input id="clinicArea" placeholder="Area" />
-<input id="clinicType" placeholder="Govt / Private" />
-<button id="submitClinic">Add Clinic</button>
-
-<hr>
-
-<pre id="output"></pre>
-
-<!-- Supabase CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- ✅ CORRECT SUPABASE SCRIPT (DO NOT CHANGE) -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 
 </body>
