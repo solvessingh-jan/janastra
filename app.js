@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===============================
   // SUPABASE CONFIG (CHANGE ONLY THIS)
   // ===============================
-  const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-  const SUPABASE_KEY = 'YOUR_ANON_PUBLIC_KEY';
+  const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_tK95wQr1Lf4mLJQSdWHVuQ_52Mag0_5';
 
   const supabase = window.supabase.createClient(
     SUPABASE_URL,
