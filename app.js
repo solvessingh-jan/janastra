@@ -176,16 +176,11 @@ function submitWater() {
 
 function viewWaterMap() {
   const area = document.getElementById('water_area').value.trim() || 'Delhi';
-  const mapDiv = document.getElementById('water_map');
-  const iframe = document.getElementById('water_map_iframe');
   
-  if (!mapDiv || !iframe) return;
+  const mapsUrl = `https://www.google.com/maps/search/water+supply+${encodeURIComponent(area)},Delhi`;
   
-  // Google Maps embed with search
-  iframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tuzjaj0quVW3sI_XIw&q=water+supply+${encodeURIComponent(area)},Delhi,India&zoom=14`;
-  
-  mapDiv.style.display = 'block';
-  mapDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  window.open(mapsUrl, '_blank');
+  showMessage('🗺️ Opening water supply map in new tab...', 'success');
 }
 
 async function checkWaterStatus() {
@@ -256,15 +251,11 @@ function submitCivic() {
 
 function viewCivicMap() {
   const area = document.getElementById('civic_area').value.trim() || 'Delhi';
-  const mapDiv = document.getElementById('civic_map');
-  const iframe = document.getElementById('civic_map_iframe');
   
-  if (!mapDiv || !iframe) return;
+  const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(area)},Delhi`;
   
-  iframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tuzjaj0quVW3sI_XIw&q=${encodeURIComponent(area)},Delhi,India&zoom=15`;
-  
-  mapDiv.style.display = 'block';
-  mapDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  window.open(mapsUrl, '_blank');
+  showMessage('🗺️ Opening area map in new tab...', 'success');
 }
 
 async function viewAreaIssues() {
@@ -328,18 +319,11 @@ function submitTraffic() {
 
 function viewLiveTraffic() {
   const area = document.getElementById('traffic_area').value.trim() || 'Connaught Place, Delhi';
-  const mapDiv = document.getElementById('traffic_map');
-  const iframe = document.getElementById('traffic_map_iframe');
   
-  if (!mapDiv || !iframe) return;
+  const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(area)}/@28.6139,77.2090,14z/data=!5m1!1e1`;
   
-  // Google Maps with traffic layer
-  iframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tuzjaj0quVW3sI_XIw&q=${encodeURIComponent(area)}&zoom=14&maptype=roadmap`;
-  
-  mapDiv.style.display = 'block';
-  mapDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  
-  showMessage('🚦 Live traffic map loaded! Traffic colors:\n🟢 Green = Light traffic\n🟡 Yellow = Moderate\n🟠 Orange = Heavy\n🔴 Red = Very heavy', 'success');
+  window.open(mapsUrl, '_blank');
+  showMessage('🚦 Opening live traffic map in new tab...', 'success');
 }
 
 async function getTrafficReport() {
@@ -531,15 +515,11 @@ async function loadClinics() {
 function viewClinicsMap() {
   const area = document.getElementById('clinic_area').value.trim() || 'Delhi';
   const specialty = document.getElementById('clinic_specialty').value || 'hospital';
-  const mapDiv = document.getElementById('clinics_map');
-  const iframe = document.getElementById('clinics_map_iframe');
   
-  if (!mapDiv || !iframe) return;
+  const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(specialty + ' near ' + area + ', Delhi')}`;
   
-  iframe.src = `https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tuzjaj0quVW3sI_XIw&q=${encodeURIComponent(specialty + ' near ' + area + ', Delhi')}&zoom=14`;
-  
-  mapDiv.style.display = 'block';
-  mapDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  window.open(mapsUrl, '_blank');
+  showMessage('🗺️ Opening clinics map in new tab...', 'success');
 }
 
 function getDirections() {
