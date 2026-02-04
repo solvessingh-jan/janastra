@@ -4,33 +4,91 @@
   <meta charset="UTF-8" />
   <title>Janastra - Citizen Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Report civic issues, check water availability, track traffic, and stay safe from scams with Janastra." />
+  <meta name="description" content="Blend timeless civic values with modern reporting tools using Janastra." />
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
   <a class="skip-link" href="#reporting">Skip to reporting</a>
   <div class="particles" id="particles" aria-hidden="true"></div>
 
-  <div class="hero">
-    <div class="hero-glass"></div>
-    <div class="hero-content">
-      <h1>🏛️ Janastra</h1>
-      <p>Your voice. One click. Real change.</p>
-      <button class="cta-btn" onclick="document.querySelector('.container').scrollIntoView({behavior: 'smooth'})">
-        <span style="position: relative; z-index: 1;">Start Reporting</span>
-      </button>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">🏛️</span>
+      <div>
+        <p class="brand-title">Janastra</p>
+        <p class="brand-subtitle">Civic Trust Network</p>
+      </div>
     </div>
-    <div class="scroll-indicator" aria-hidden="true">
-      <svg width="30" height="50" viewBox="0 0 30 50">
-        <rect x="5" y="5" width="20" height="40" rx="10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-        <circle cx="15" cy="15" r="3" fill="rgba(255,255,255,0.8)">
-          <animate attributeName="cy" from="15" to="30" dur="1.5s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite"/>
-        </circle>
-      </svg>
+    <nav class="site-nav">
+      <a href="#heritage">Heritage</a>
+      <a href="#tools">Digital Tools</a>
+      <a href="#reporting">Report Now</a>
+    </nav>
+  </header>
+
+  <section class="heritage-hero">
+    <div class="heritage-hero-content">
+      <p class="heritage-ribbon">Since 1951 • Community-led</p>
+      <h1>Tradition Meets Technology</h1>
+      <p class="heritage-lead">
+        Janastra pairs the dignity of public service with modern, one-click reporting to
+        keep every neighborhood safe, healthy, and heard.
+      </p>
+      <div class="heritage-actions">
+        <button class="cta-btn" type="button" onclick="document.querySelector('#reporting').scrollIntoView({behavior: 'smooth'})">
+          <span>Start Reporting</span>
+        </button>
+        <button class="secondary-btn" type="button" onclick="document.querySelector('#tools').scrollIntoView({behavior: 'smooth'})">
+          Explore Tools
+        </button>
+      </div>
     </div>
-  </div>
+    <div class="heritage-hero-card">
+      <div class="heritage-card-top">
+        <span class="heritage-ornament">✦</span>
+        <p>Citizen Pledge</p>
+      </div>
+      <p class="heritage-quote">
+        “We honour our streets, protect our people, and report with care.”
+      </p>
+      <div class="heritage-card-bottom">
+        <span>Verified by local ward councils</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="heritage-strip" id="heritage">
+    <div class="heritage-strip-item">
+      <h2>Traditional Assurance</h2>
+      <p>Legacy-inspired reporting formats ensure clarity and accountability in every submission.</p>
+    </div>
+    <div class="heritage-strip-item">
+      <h2>Modern Responsiveness</h2>
+      <p>Live dashboards, real-time updates, and automated routing accelerate civic action.</p>
+    </div>
+    <div class="heritage-strip-item">
+      <h2>Community First</h2>
+      <p>People-powered insights guide municipal teams with transparent status updates.</p>
+    </div>
+  </section>
+
+  <section class="tools-section" id="tools">
+    <h2 class="section-title">Modern Tools, Timeless Values</h2>
+    <div class="tools-grid">
+      <article class="tool-card">
+        <h3>Neighborhood Ledger</h3>
+        <p>Digitized civic logs record water and infrastructure issues while honoring traditional logbooks.</p>
+      </article>
+      <article class="tool-card">
+        <h3>Smart Alert Bells</h3>
+        <p>Scam alerts arrive instantly, inspired by the community bell system of old townships.</p>
+      </article>
+      <article class="tool-card">
+        <h3>Heritage Clinics Map</h3>
+        <p>Find trusted clinics with modern mapping layered on top of local health registries.</p>
+      </article>
+    </div>
+  </section>
 
   <main class="container" id="reporting">
     <h2 class="section-title">Report. Track. Transform.</h2>
@@ -270,6 +328,14 @@
       </div>
     </div>
   </main>
+
+  <footer class="site-footer">
+    <div>
+      <h3>Janastra Heritage Office</h3>
+      <p>Serving citizens with dignity and modern care.</p>
+    </div>
+    <p class="footer-note">© 1951–2024 Janastra Collective. Digital reporting with timeless values.</p>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>

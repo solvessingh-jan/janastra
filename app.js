@@ -98,11 +98,23 @@ document.querySelectorAll('.tab').forEach(tab => {
     const tabName = tab.dataset.tab;
     
     // Update active states
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+      t.setAttribute('tabindex', '-1');
+    });
+    document.querySelectorAll('.form-section').forEach(s => {
+      s.classList.remove('active');
+      s.setAttribute('aria-hidden', 'true');
+    });
     tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    tab.setAttribute('tabindex', '0');
     const section = document.getElementById(tabName);
-    if (section) section.classList.add('active');
+    if (section) {
+      section.classList.add('active');
+      section.setAttribute('aria-hidden', 'false');
+    }
     
     // Update output
     const output = document.getElementById('output');
@@ -158,7 +170,7 @@ async function submitReport(tableName, data, buttonElement) {
 
 // ==================== WATER SECTION ====================
 
-function submitWater() {
+function submitWater(buttonEl) {
   const area = document.getElementById('water_area').value.trim();
   const status = document.getElementById('water_status').value;
   
@@ -171,7 +183,7 @@ function submitWater() {
     area,
     status,
     reported_at: new Date().toISOString()
-  }, event.target);
+  }, buttonEl);
 }
 
 function viewWaterMap() {
@@ -231,7 +243,7 @@ async function checkWaterStatus() {
 
 // ==================== CIVIC SECTION ====================
 
-function submitCivic() {
+function submitCivic(buttonEl) {
   const area = document.getElementById('civic_area').value.trim();
   const category = document.getElementById('civic_category').value;
   const desc = document.getElementById('civic_desc').value.trim();
@@ -246,7 +258,7 @@ function submitCivic() {
     category,
     description: desc,
     reported_at: new Date().toISOString()
-  }, event.target);
+  }, buttonEl);
 }
 
 function viewCivicMap() {
@@ -301,7 +313,7 @@ async function viewAreaIssues() {
 
 // ==================== TRAFFIC SECTION ====================
 
-function submitTraffic() {
+function submitTraffic(buttonEl) {
   const area = document.getElementById('traffic_area').value.trim();
   const issue = document.getElementById('traffic_issue').value;
 
@@ -314,7 +326,7 @@ function submitTraffic() {
     area,
     issue_type: issue,
     reported_at: new Date().toISOString()
-  }, event.target);
+  }, buttonEl);
 }
 
 function viewLiveTraffic() {
@@ -370,14 +382,26 @@ async function getTrafficReport() {
 
 // ==================== SCAM SECTION ====================
 
-function showScamTab(tab) {
-  const clickedButton = event.target;
-  document.querySelectorAll('.scam-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.scam-section').forEach(s => s.style.display = 'none');
+function showScamTab(tab, buttonEl) {
+  const clickedButton = buttonEl;
+  document.querySelectorAll('.scam-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+    t.setAttribute('tabindex', '-1');
+  });
+  document.querySelectorAll('.scam-section').forEach(s => {
+    s.style.display = 'none';
+    s.setAttribute('aria-hidden', 'true');
+  });
   
   clickedButton.classList.add('active');
+  clickedButton.setAttribute('aria-selected', 'true');
+  clickedButton.setAttribute('tabindex', '0');
   const section = document.getElementById('scam_' + tab);
-  if (section) section.style.display = 'block';
+  if (section) {
+    section.style.display = 'block';
+    section.setAttribute('aria-hidden', 'false');
+  }
 }
 
 async function checkPhoneNumber() {
@@ -432,7 +456,7 @@ async function checkPhoneNumber() {
   }
 }
 
-function submitScam() {
+function submitScam(buttonEl) {
   const phone = document.getElementById('scam_phone').value.trim();
   const area = document.getElementById('scam_area').value.trim();
   const scamType = document.getElementById('scam_type').value;
@@ -454,7 +478,7 @@ function submitScam() {
     scam_type: scamType,
     description: desc,
     reported_at: new Date().toISOString()
-  }, event.target);
+  }, buttonEl);
   
   // Reload stats after submission
   setTimeout(() => loadScamStats(), 1000);
