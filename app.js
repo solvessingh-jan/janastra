@@ -128,7 +128,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 // Generic submit helper with enhanced UX
 async function submitReport(tableName, data, buttonElement) {
   const output = document.getElementById('output');
-  const submitBtn = buttonElement;
+  const submitBtn = buttonElement || (typeof event !== 'undefined' ? event.target : null);
   
   if (!output || !submitBtn) return;
   
