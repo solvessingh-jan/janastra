@@ -5,6 +5,9 @@
   <title>Janastra - Citizen Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Report civic issues, check water availability, track traffic, and stay safe from scams with Janastra." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,14 +15,38 @@
   <a class="skip-link" href="#reporting">Skip to reporting</a>
   <div class="particles" id="particles" aria-hidden="true"></div>
 
+  <header class="site-header">
+    <div class="heritage-band">
+      <div class="heritage-crest">
+        <span class="crest-mark">🏛️</span>
+        <span class="crest-title">Janastra Civic Desk</span>
+      </div>
+      <div class="heritage-ornament">— Serving communities with trust and transparency —</div>
+      <div class="modern-badge">Live civic signals</div>
+    </div>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#water">Water</a>
+      <a href="#civic">Civic</a>
+      <a href="#traffic">Traffic</a>
+      <a href="#scam">Scam</a>
+      <a href="#clinics">Clinics</a>
+    </nav>
+  </header>
+
   <div class="hero">
     <div class="hero-glass"></div>
     <div class="hero-content">
-      <h1>🏛️ Janastra</h1>
+      <p class="heritage-kicker">Citizen reporting, reimagined.</p>
+      <h1 class="heritage-title">Janastra <span class="modern-highlight">Digital Sabha</span></h1>
       <p>Your voice. One click. Real change.</p>
-      <button class="cta-btn" onclick="document.querySelector('.container').scrollIntoView({behavior: 'smooth'})">
+      <button class="cta-btn" type="button" onclick="document.querySelector('.container').scrollIntoView({behavior: 'smooth'})">
         <span style="position: relative; z-index: 1;">Start Reporting</span>
       </button>
+      <div class="hero-trust">
+        <span>🔔 Verified updates</span>
+        <span>🪔 Heritage-led service</span>
+        <span>⚡ Real-time dashboards</span>
+      </div>
     </div>
     <div class="scroll-indicator" aria-hidden="true">
       <svg width="30" height="50" viewBox="0 0 30 50">
@@ -33,6 +60,23 @@
   </div>
 
   <main class="container" id="reporting">
+    <section class="heritage-panel">
+      <div>
+        <h2 class="heritage-panel-title">Traditional care, modern capability</h2>
+        <p>Our civic registry blends time-honored stewardship with live reporting so communities can act faster and smarter.</p>
+      </div>
+      <div class="heritage-panel-grid">
+        <div class="feature-card">
+          <h3>🪷 Community Ledger</h3>
+          <p>Rooted in accountability, every report is logged with transparent timestamps.</p>
+        </div>
+        <div class="feature-card modern-card">
+          <h3>⚡ Live Signal Room</h3>
+          <p>Modern data pipelines surface urgent updates across water, traffic, and safety.</p>
+        </div>
+      </div>
+    </section>
+
     <h2 class="section-title">Report. Track. Transform.</h2>
 
     <div class="tabs" role="tablist" aria-label="Reporting categories">
