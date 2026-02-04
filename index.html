@@ -2,90 +2,143 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Janastra - Citizen Reporting</title>
+  <title>Janastra - Citizen Reporting Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Blend timeless civic values with modern reporting tools using Janastra." />
+  <meta name="description" content="Janastra blends community reporting with a studio-inspired civic experience." />
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="studio-page">
   <a class="skip-link" href="#reporting">Skip to reporting</a>
   <div class="particles" id="particles" aria-hidden="true"></div>
 
-  <header class="site-header">
+  <header class="studio-header">
     <div class="brand">
-      <span class="brand-mark">🏛️</span>
+      <span class="brand-mark">✺</span>
       <div>
         <p class="brand-title">Janastra</p>
-        <p class="brand-subtitle">Civic Trust Network</p>
+        <p class="brand-subtitle">Citizen Reporting Studio</p>
       </div>
     </div>
-    <nav class="site-nav">
-      <a href="#heritage">Heritage</a>
-      <a href="#tools">Digital Tools</a>
-      <a href="#reporting">Report Now</a>
+    <nav class="studio-nav">
+      <a href="#work">Work</a>
+      <a href="#services">Services</a>
+      <a href="#insights">Insights</a>
+      <a href="#reporting">Report</a>
     </nav>
+    <button class="studio-cta" type="button" onclick="document.querySelector('#reporting').scrollIntoView({behavior: 'smooth'})">
+      Start a report
+    </button>
   </header>
 
-  <section class="heritage-hero">
-    <div class="heritage-hero-content">
-      <p class="heritage-ribbon">Since 1951 • Community-led</p>
-      <h1>Tradition Meets Technology</h1>
-      <p class="heritage-lead">
-        Janastra pairs the dignity of public service with modern, one-click reporting to
-        keep every neighborhood safe, healthy, and heard.
+  <section class="studio-hero">
+    <div class="studio-hero-text">
+      <p class="studio-kicker">Civic design + live reporting</p>
+      <h1>Make the city feel heard.</h1>
+      <p class="studio-lead">
+        Janastra is a citizen-first reporting studio—pairing local knowledge with modern digital
+        workflows to keep neighborhoods safer, cleaner, and more connected.
       </p>
-      <div class="heritage-actions">
+      <div class="studio-hero-actions">
         <button class="cta-btn" type="button" onclick="document.querySelector('#reporting').scrollIntoView({behavior: 'smooth'})">
-          <span>Start Reporting</span>
+          Launch reporting
         </button>
-        <button class="secondary-btn" type="button" onclick="document.querySelector('#tools').scrollIntoView({behavior: 'smooth'})">
-          Explore Tools
+        <button class="secondary-btn" type="button" onclick="document.querySelector('#work').scrollIntoView({behavior: 'smooth'})">
+          View impact
         </button>
       </div>
     </div>
-    <div class="heritage-hero-card">
-      <div class="heritage-card-top">
-        <span class="heritage-ornament">✦</span>
-        <p>Citizen Pledge</p>
+    <div class="studio-hero-card">
+      <div class="studio-card-row">
+        <span class="studio-chip">Since 2015</span>
+        <span class="studio-chip">City + Ward teams</span>
       </div>
-      <p class="heritage-quote">
-        “We honour our streets, protect our people, and report with care.”
+      <p class="studio-card-title">Neighborhood signals</p>
+      <p class="studio-card-copy">
+        We translate citizen reports into clear action plans with responsive dashboards, civic
+        intelligence, and trusted community operators.
       </p>
-      <div class="heritage-card-bottom">
-        <span>Verified by local ward councils</span>
+      <div class="studio-card-metrics">
+        <div>
+          <p class="metric-value">48</p>
+          <p class="metric-label">Active wards</p>
+        </div>
+        <div>
+          <p class="metric-value">2.1k</p>
+          <p class="metric-label">Reports/week</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="heritage-strip" id="heritage">
-    <div class="heritage-strip-item">
-      <h2>Traditional Assurance</h2>
-      <p>Legacy-inspired reporting formats ensure clarity and accountability in every submission.</p>
-    </div>
-    <div class="heritage-strip-item">
-      <h2>Modern Responsiveness</h2>
-      <p>Live dashboards, real-time updates, and automated routing accelerate civic action.</p>
-    </div>
-    <div class="heritage-strip-item">
-      <h2>Community First</h2>
-      <p>People-powered insights guide municipal teams with transparent status updates.</p>
+  <section class="studio-marquee">
+    <div class="marquee-track">
+      <span>Water + civic + traffic + scam protection + healthcare</span>
+      <span>Water + civic + traffic + scam protection + healthcare</span>
     </div>
   </section>
 
-  <section class="tools-section" id="tools">
-    <h2 class="section-title">Modern Tools, Timeless Values</h2>
-    <div class="tools-grid">
-      <article class="tool-card">
-        <h3>Neighborhood Ledger</h3>
-        <p>Digitized civic logs record water and infrastructure issues while honoring traditional logbooks.</p>
+  <section class="studio-work" id="work">
+    <div class="studio-section-header">
+      <h2>Featured civic work</h2>
+      <p>Modern reporting experiences informed by local traditions and people-powered insights.</p>
+    </div>
+    <div class="studio-work-grid">
+      <article class="studio-work-card">
+        <h3>Ward Pulse</h3>
+        <p>Real-time water and sanitation dashboards powered by citizen micro-reports.</p>
       </article>
-      <article class="tool-card">
-        <h3>Smart Alert Bells</h3>
-        <p>Scam alerts arrive instantly, inspired by the community bell system of old townships.</p>
+      <article class="studio-work-card">
+        <h3>Roadwatch</h3>
+        <p>Traffic + road repair reports routed directly to engineers with heatmap summaries.</p>
       </article>
-      <article class="tool-card">
-        <h3>Heritage Clinics Map</h3>
-        <p>Find trusted clinics with modern mapping layered on top of local health registries.</p>
+      <article class="studio-work-card">
+        <h3>Trustline</h3>
+        <p>Scam awareness hub that helps residents verify numbers before taking action.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="studio-services" id="services">
+    <div class="studio-section-header">
+      <h2>Services with civic soul</h2>
+      <p>We blend legacy workflows with progressive tools for faster response.</p>
+    </div>
+    <div class="studio-services-grid">
+      <div class="studio-service">
+        <h3>Community intake</h3>
+        <p>Structured reporting that mirrors traditional ledger formats.</p>
+      </div>
+      <div class="studio-service">
+        <h3>Live mapping</h3>
+        <p>Instant visualizations for city teams and resident groups.</p>
+      </div>
+      <div class="studio-service">
+        <h3>Local care routing</h3>
+        <p>Clinic and safety alerts tailored to neighborhood needs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="studio-insights" id="insights">
+    <div class="studio-section-header">
+      <h2>Insights + reporting notes</h2>
+      <p>Latest signals from civic contributors.</p>
+    </div>
+    <div class="studio-insights-grid">
+      <article>
+        <p class="insight-date">Update · 2 days ago</p>
+        <h3>Monsoon prep checklist for ward captains</h3>
+        <p>Key tasks to reduce water disruption and road hazards before heavy rains.</p>
+      </article>
+      <article>
+        <p class="insight-date">Playbook · 1 week ago</p>
+        <h3>How to identify scam call patterns</h3>
+        <p>Shared steps for residents to verify unknown numbers quickly.</p>
+      </article>
+      <article>
+        <p class="insight-date">Report · 3 weeks ago</p>
+        <h3>Citizen responses to traffic pulse surveys</h3>
+        <p>Highlights from 1,200 commuters on congestion hot spots.</p>
       </article>
     </div>
   </section>
@@ -329,12 +382,17 @@
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer class="studio-footer">
     <div>
-      <h3>Janastra Heritage Office</h3>
-      <p>Serving citizens with dignity and modern care.</p>
+      <h3>Janastra Studio</h3>
+      <p>Citizen reporting tools shaped by local voices.</p>
     </div>
-    <p class="footer-note">© 1951–2024 Janastra Collective. Digital reporting with timeless values.</p>
+    <div class="footer-links">
+      <a href="#services">Services</a>
+      <a href="#insights">Insights</a>
+      <a href="#reporting">Report</a>
+    </div>
+    <p class="footer-note">© 2024 Janastra. Built with care for every neighborhood.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
