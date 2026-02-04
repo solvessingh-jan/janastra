@@ -24,22 +24,78 @@ if (navigator.geolocation) {
   );
 }
 
-// Create floating particles
-const particlesContainer = document.getElementById('particles');
-if (particlesContainer) {
-  for (let i = 0; i < 50; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.width = Math.random() * 4 + 1 + 'px';
-    particle.style.height = particle.style.width;
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDelay = Math.random() * 20 + 's';
-    particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-    particlesContainer.appendChild(particle);
-  }
+// ================================
+// ANIMATED DOT CANVAS BACKGROUND
+// ================================
+
+const canvas = document.getElementById('dotCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
 
-// Animate stats
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const dots = [];
+const dotCount = 60;
+const maxDistance = 150;
+
+for (let i = 0; i < dotCount; i++) {
+  dots.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: (Math.random() - 0.5) * 0.5,
+    radius: Math.random() * 2 + 1
+  });
+}
+
+function animateDots() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  dots.forEach(dot => {
+    dot.x += dot.vx;
+    dot.y += dot.vy;
+    
+    if (dot.x < 0 || dot.x > canvas.width) dot.vx *= -1;
+    if (dot.y < 0 || dot.y > canvas.height) dot.vy *= -1;
+    
+    ctx.beginPath();
+    ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(232, 185, 49, 0.3)';
+    ctx.fill();
+  });
+  
+  // Draw connections
+  for (let i = 0; i < dots.length; i++) {
+    for (let j = i + 1; j < dots.length; j++) {
+      const dx = dots[i].x - dots[j].x;
+      const dy = dots[i].y - dots[j].y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < maxDistance) {
+        ctx.beginPath();
+        ctx.moveTo(dots[i].x, dots[i].y);
+        ctx.lineTo(dots[j].x, dots[j].y);
+        ctx.strokeStyle = `rgba(232, 185, 49, ${0.15 * (1 - distance / maxDistance)})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  }
+  
+  requestAnimationFrame(animateDots);
+}
+
+animateDots();
+
+// ================================
+// IMPACT STATS ANIMATION
+// ================================
+
 function animateValue(id, start, end, duration) {
   const obj = document.getElementById(id);
   if (!obj) return;
@@ -54,13 +110,27 @@ function animateValue(id, start, end, duration) {
   }, stepTime);
 }
 
-setTimeout(() => {
-  animateValue('stat1', 0, 1250, 2000);
-  animateValue('stat2', 0, 847, 2000);
-  animateValue('stat3', 0, 3420, 2000);
-}, 1000);
+// Intersection Observer for stats animation
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateValue('stat1', 0, 1250, 2000);
+      animateValue('stat2', 0, 847, 2000);
+      animateValue('stat3', 0, 3420, 2000);
+      statsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
 
-// Load scam stats
+const impactSection = document.querySelector('.impact-section');
+if (impactSection) {
+  statsObserver.observe(impactSection);
+}
+
+// ================================
+// SCAM STATS LOADING
+// ================================
+
 async function loadScamStats() {
   try {
     const { count: totalScams } = await supabaseClient
@@ -85,46 +155,46 @@ async function loadScamStats() {
   }
 }
 
-// Wait for DOM to load before loading stats
 document.addEventListener('DOMContentLoaded', () => {
   loadScamStats();
-  const firstInput = document.querySelector('#water input');
-  if (firstInput) firstInput.focus();
 });
 
-// Tab switching with smooth animations
-document.querySelectorAll('.tab').forEach(tab => {
+// ================================
+// TAB SWITCHING
+// ================================
+
+document.querySelectorAll('.category-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const tabName = tab.dataset.tab;
     
     // Update active states
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.report-section').forEach(s => s.classList.remove('active'));
     tab.classList.add('active');
     const section = document.getElementById(tabName);
     if (section) section.classList.add('active');
     
     // Update output
-    const output = document.getElementById('output');
-    if (output) {
-      output.textContent = `Selected: ${tabName.toUpperCase()} tab\nReady to receive reports...`;
-      output.className = 'output';
-    }
+    showMessage(`${tabName.toUpperCase()} section loaded. Ready to receive reports...`, '');
   });
 });
 
-// Generic submit helper with enhanced UX
+// ================================
+// GENERIC SUBMIT HELPER
+// ================================
+
 async function submitReport(tableName, data, buttonElement) {
-  const output = document.getElementById('output');
+  const output = document.querySelector('.output-content');
+  const outputDisplay = document.querySelector('.output-display');
   const submitBtn = buttonElement;
   
-  if (!output || !submitBtn) return;
+  if (!output || !submitBtn || !outputDisplay) return;
   
   output.textContent = 'Submitting your report...';
-  output.className = 'output loading';
+  outputDisplay.className = 'output-display loading';
   submitBtn.disabled = true;
-  const originalText = submitBtn.textContent;
-  submitBtn.textContent = 'Submitting...';
+  const originalText = submitBtn.querySelector('span').textContent;
+  submitBtn.querySelector('span').textContent = 'Submitting...';
 
   try {
     const { data: result, error } = await supabaseClient
@@ -136,7 +206,7 @@ async function submitReport(tableName, data, buttonElement) {
     if (error) throw error;
 
     output.textContent = `✅ Success! Your ${tableName.replace('_', ' ')} report has been submitted.\n\nID: ${result.id}\nTime: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}\n\nThank you for helping your community!`;
-    output.className = 'output success';
+    outputDisplay.className = 'output-display success';
     
     // Clear form
     document.querySelectorAll('input, textarea, select').forEach(input => {
@@ -149,14 +219,16 @@ async function submitReport(tableName, data, buttonElement) {
     
   } catch (error) {
     output.textContent = `❌ Error: ${error.message}\n\nPlease check your connection and try again.`;
-    output.className = 'output error';
+    outputDisplay.className = 'output-display error';
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
+    submitBtn.querySelector('span').textContent = originalText;
   }
 }
 
-// ==================== WATER SECTION ====================
+// ================================
+// WATER SECTION
+// ================================
 
 function submitWater() {
   const area = document.getElementById('water_area').value.trim();
@@ -176,9 +248,7 @@ function submitWater() {
 
 function viewWaterMap() {
   const area = document.getElementById('water_area').value.trim() || 'Delhi';
-  
   const mapsUrl = `https://www.google.com/maps/search/water+supply+${encodeURIComponent(area)},Delhi`;
-  
   window.open(mapsUrl, '_blank');
   showMessage('🗺️ Opening water supply map in new tab...', 'success');
 }
@@ -190,10 +260,11 @@ async function checkWaterStatus() {
     return;
   }
   
-  const output = document.getElementById('output');
-  if (!output) return;
+  const output = document.querySelector('.output-content');
+  const outputDisplay = document.querySelector('.output-display');
+  if (!output || !outputDisplay) return;
   
-  output.className = 'output loading';
+  outputDisplay.className = 'output-display loading';
   output.textContent = 'Checking water status...';
   
   try {
@@ -208,7 +279,7 @@ async function checkWaterStatus() {
     
     if (!data || data.length === 0) {
       output.textContent = `No recent reports found for "${area}".\nBe the first to report!`;
-      output.className = 'output';
+      outputDisplay.className = 'output-display';
       return;
     }
     
@@ -222,14 +293,16 @@ async function checkWaterStatus() {
       .join('\n');
     
     output.textContent = `Water Status in "${area}":\n\n${statusText}\n\nLast updated: ${new Date(data[0].reported_at).toLocaleString('en-IN')}`;
-    output.className = 'output success';
+    outputDisplay.className = 'output-display success';
   } catch (error) {
     output.textContent = `❌ Error: ${error.message}`;
-    output.className = 'output error';
+    outputDisplay.className = 'output-display error';
   }
 }
 
-// ==================== CIVIC SECTION ====================
+// ================================
+// CIVIC SECTION
+// ================================
 
 function submitCivic() {
   const area = document.getElementById('civic_area').value.trim();
@@ -251,9 +324,7 @@ function submitCivic() {
 
 function viewCivicMap() {
   const area = document.getElementById('civic_area').value.trim() || 'Delhi';
-  
   const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(area)},Delhi`;
-  
   window.open(mapsUrl, '_blank');
   showMessage('🗺️ Opening area map in new tab...', 'success');
 }
@@ -265,10 +336,11 @@ async function viewAreaIssues() {
     return;
   }
   
-  const output = document.getElementById('output');
-  if (!output) return;
+  const output = document.querySelector('.output-content');
+  const outputDisplay = document.querySelector('.output-display');
+  if (!output || !outputDisplay) return;
   
-  output.className = 'output loading';
+  outputDisplay.className = 'output-display loading';
   output.textContent = 'Loading area issues...';
   
   try {
@@ -283,7 +355,7 @@ async function viewAreaIssues() {
     
     if (!data || data.length === 0) {
       output.textContent = `No issues reported in "${area}". Great news! 🎉`;
-      output.className = 'output success';
+      outputDisplay.className = 'output-display success';
       return;
     }
     
@@ -292,14 +364,16 @@ async function viewAreaIssues() {
     ).join('\n\n');
     
     output.textContent = `Civic Issues in "${area}" (${data.length} found):\n\n${issuesList}`;
-    output.className = 'output success';
+    outputDisplay.className = 'output-display success';
   } catch (error) {
     output.textContent = `❌ Error: ${error.message}`;
-    output.className = 'output error';
+    outputDisplay.className = 'output-display error';
   }
 }
 
-// ==================== TRAFFIC SECTION ====================
+// ================================
+// TRAFFIC SECTION
+// ================================
 
 function submitTraffic() {
   const area = document.getElementById('traffic_area').value.trim();
@@ -319,9 +393,7 @@ function submitTraffic() {
 
 function viewLiveTraffic() {
   const area = document.getElementById('traffic_area').value.trim() || 'Connaught Place, Delhi';
-  
   const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(area)}/@28.6139,77.2090,14z/data=!5m1!1e1`;
-  
   window.open(mapsUrl, '_blank');
   showMessage('🚦 Opening live traffic map in new tab...', 'success');
 }
@@ -333,10 +405,11 @@ async function getTrafficReport() {
     return;
   }
   
-  const output = document.getElementById('output');
-  if (!output) return;
+  const output = document.querySelector('.output-content');
+  const outputDisplay = document.querySelector('.output-display');
+  if (!output || !outputDisplay) return;
   
-  output.className = 'output loading';
+  outputDisplay.className = 'output-display loading';
   output.textContent = 'Fetching traffic reports...';
   
   try {
@@ -351,7 +424,7 @@ async function getTrafficReport() {
     
     if (!data || data.length === 0) {
       output.textContent = `No recent traffic reports for "${area}".\nBe the first to report current conditions!`;
-      output.className = 'output';
+      outputDisplay.className = 'output-display';
       return;
     }
     
@@ -361,19 +434,21 @@ async function getTrafficReport() {
     }).join('\n');
     
     output.textContent = `Traffic Reports for "${area}":\n\n${recentReports}\n\n💡 Tip: Check live map for real-time traffic colors`;
-    output.className = 'output success';
+    outputDisplay.className = 'output-display success';
   } catch (error) {
     output.textContent = `❌ Error: ${error.message}`;
-    output.className = 'output error';
+    outputDisplay.className = 'output-display error';
   }
 }
 
-// ==================== SCAM SECTION ====================
+// ================================
+// SCAM SECTION
+// ================================
 
 function showScamTab(tab) {
-  const clickedButton = event.target;
-  document.querySelectorAll('.scam-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.scam-section').forEach(s => s.style.display = 'none');
+  const clickedButton = event.target.closest('.toggle-button');
+  document.querySelectorAll('.toggle-button').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.scam-panel').forEach(s => s.style.display = 'none');
   
   clickedButton.classList.add('active');
   const section = document.getElementById('scam_' + tab);
@@ -411,7 +486,7 @@ async function checkPhoneNumber() {
     
     if (!data || data.length === 0) {
       iconDiv.textContent = '✅';
-      statusDiv.innerHTML = '<span style="color: #10b981;">Safe Number</span>';
+      statusDiv.innerHTML = '<span style="color: #4ade80;">Safe Number</span>';
       detailsDiv.textContent = 'No scam reports found for this number in our database.';
       reportsDiv.textContent = 'This number appears to be safe. However, always be cautious with unknown callers.';
     } else {
@@ -425,8 +500,7 @@ async function checkPhoneNumber() {
       reportsDiv.innerHTML = `<strong>Latest report:</strong><br>${latestReport.description.substring(0, 150)}...<br><br><strong>⚠️ DO NOT share OTP, card details, or send money to this number!</strong>`;
     }
     
-    const output = document.getElementById('output');
-    if (output) output.textContent = '';
+    showMessage('', '');
   } catch (error) {
     showMessage(`❌ Error: ${error.message}`, 'error');
   }
@@ -460,22 +534,25 @@ function submitScam() {
   setTimeout(() => loadScamStats(), 1000);
 }
 
-// ==================== CLINICS SECTION ====================
+// ================================
+// CLINICS SECTION
+// ================================
 
 async function loadClinics() {
   const area = document.getElementById('clinic_area').value.trim();
   const specialty = document.getElementById('clinic_specialty').value;
-  const output = document.getElementById('output');
+  const output = document.querySelector('.output-content');
+  const outputDisplay = document.querySelector('.output-display');
 
   if (!area) {
     showMessage('Please enter your area', 'error');
     return;
   }
 
-  if (!output) return;
+  if (!output || !outputDisplay) return;
 
   output.textContent = '🔍 Searching for clinics nearby...';
-  output.className = 'output loading';
+  outputDisplay.className = 'output-display loading';
 
   if (clinicsChannel) {
     supabaseClient.removeChannel(clinicsChannel);
@@ -494,13 +571,13 @@ async function loadClinics() {
 
   if (error) {
     output.textContent = `❌ Error: ${error.message}`;
-    output.className = 'output error';
+    outputDisplay.className = 'output-display error';
     return;
   }
 
   if (!data || data.length === 0) {
     output.textContent = `No clinics found in "${area}"${specialty ? ` with specialty: ${specialty}` : ''}.\n\nTry searching nearby areas or view map for more options.`;
-    output.className = 'output';
+    outputDisplay.className = 'output-display';
     return;
   }
 
@@ -509,15 +586,13 @@ async function loadClinics() {
   ).join('\n\n');
 
   output.textContent = `Found ${data.length} clinic(s) in "${area}":\n\n${clinicsList}\n\n💡 Click "View on Map" to see locations`;
-  output.className = 'output success';
+  outputDisplay.className = 'output-display success';
 }
 
 function viewClinicsMap() {
   const area = document.getElementById('clinic_area').value.trim() || 'Delhi';
   const specialty = document.getElementById('clinic_specialty').value || 'hospital';
-  
   const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(specialty + ' near ' + area + ', Delhi')}`;
-  
   window.open(mapsUrl, '_blank');
   showMessage('🗺️ Opening clinics map in new tab...', 'success');
 }
@@ -531,18 +606,20 @@ function getDirections() {
   
   const specialty = document.getElementById('clinic_specialty').value || 'hospital';
   const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(specialty + ' near ' + area + ', Delhi')}`;
-  
   window.open(mapsUrl, '_blank');
   showMessage('🧭 Opening Google Maps directions in new tab...', 'success');
 }
 
-// ==================== UTILITY FUNCTIONS ====================
+// ================================
+// UTILITY FUNCTIONS
+// ================================
 
-function showMessage(message, type = 'error') {
-  const output = document.getElementById('output');
-  if (!output) return;
+function showMessage(message, type = '') {
+  const output = document.querySelector('.output-content');
+  const outputDisplay = document.querySelector('.output-display');
+  if (!output || !outputDisplay) return;
   output.textContent = message;
-  output.className = 'output ' + type;
+  outputDisplay.className = 'output-display ' + type;
 }
 
 function getTimeAgo(date) {
