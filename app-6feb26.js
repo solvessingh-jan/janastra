@@ -1,0 +1,402 @@
+// ================================
+// Janastra - Enhanced with Error Handling
+// ================================
+
+const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MjU4MjMsImV4cCI6MjA0NzQwMTgyM30.tK95wQr1Lf4mLJQSdWHVuQ_52Mag0';
+
+let supabaseClient = null;
+try {
+  const { createClient } = supabase;
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (error) {
+  console.error('Supabase init failed:', error);
+}
+
+let currentUserLocation = { lat: 28.6139, lng: 77.2090 };
+let currentCategory = 'water';
+let scamMode = 'check';
+let isOnline = navigator.onLine;
+
+window.addEventListener('online', () => { isOnline = true; showToast('✓ Back online!', 'success'); });
+window.addEventListener('offline', () => { isOnline = false; showToast('⚠ No internet connection', 'warning', 8000); });
+
+function showToast(message, type = 'success', duration = 4000) {
+  try {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+    toast.innerHTML = `<div class="toast-icon">${icons[type]||icons.info}</div><div class="toast-content"><div class="toast-title">${type.charAt(0).toUpperCase()+type.slice(1)}</div><div class="toast-message">${message.replace(/[<>]/g,'')}</div></div>`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.animation = 'slideOutRight 0.3s ease-out forwards'; setTimeout(() => toast.remove(), 300); }, duration);
+  } catch (e) { console.error('Toast error:', e); alert(message); }
+}
+
+function validateForm(fields) {
+  for (const [id, name] of Object.entries(fields)) {
+    const el = document.getElementById(id);
+    if (!el || !el.value.trim()) { showToast(`Please enter ${name}`, 'warning'); el?.focus(); return false; }
+    el.classList.remove('error');
+  }
+  return true;
+}
+
+function validatePhone(phone) {
+  phone = phone.replace(/[\s\-()]/g, '');
+  if (!/^\d{10}$/.test(phone)) return { valid: false, error: 'Phone must be 10 digits' };
+  if (!/^[6-9]\d{9}$/.test(phone)) return { valid: false, error: 'Phone must start with 6-9' };
+  return { valid: true, cleaned: phone };
+}
+
+function validateArea(area) {
+  if (area.length < 3) return { valid: false, error: 'Area must be at least 3 characters' };
+  if (area.length > 100) return { valid: false, error: 'Area name too long (max 100)' };
+  return { valid: true };
+}
+
+function setButtonLoading(btn, loading) {
+  if (!btn) return;
+  const txt = btn.querySelector('.btn-text');
+  const ldr = btn.querySelector('.btn-loader');
+  if (loading) { btn.disabled = true; if(txt) txt.style.display = 'none'; if(ldr) ldr.style.display = 'inline-flex'; }
+  else { btn.disabled = false; if(txt) txt.style.display = 'inline'; if(ldr) ldr.style.display = 'none'; }
+}
+
+async function safeInsert(table, data) {
+  if (!isOnline) throw new Error('No internet connection');
+  if (!supabaseClient) throw new Error('Database not available');
+  const { data: result, error } = await supabaseClient.from(table).insert([data]).select().single();
+  if (error) {
+    if (error.code === '23505') throw new Error('Report already exists');
+    if (error.message.includes('JWT')) throw new Error('Session expired. Refresh page');
+    throw new Error(`Database error: ${error.message}`);
+  }
+  return result;
+}
+
+function animateValue(id, start, end, duration, prefix = '', suffix = '') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const inc = (end - start) / (duration / 16);
+  let cur = start;
+  const timer = setInterval(() => {
+    cur += inc;
+    if ((inc > 0 && cur >= end) || (inc < 0 && cur <= end)) { el.textContent = prefix + Math.round(end).toLocaleString() + suffix; clearInterval(timer); }
+    else { el.textContent = prefix + Math.round(cur).toLocaleString() + suffix; }
+  }, 16);
+}
+
+function scrollToElement(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
+function scrollToReporting() { scrollToElement('#reporting'); }
+
+function switchCategory(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.category-tab').forEach(t => { const active = t.dataset.category === cat; t.classList.toggle('active', active); t.setAttribute('aria-selected', active); });
+  document.querySelectorAll('.report-form').forEach(f => { f.classList.remove('active'); f.style.display = 'none'; });
+  const form = document.getElementById(`form-${cat}`);
+  if (form) { form.classList.add('active'); form.style.display = 'block'; }
+}
+
+async function submitWater(btn) {
+  if (!validateForm({ 'water_area': 'area', 'water_status': 'status' })) return;
+  setButtonLoading(btn, true);
+  try {
+    const area = document.getElementById('water_area').value.trim();
+    const status = document.getElementById('water_status').value;
+    const areaVal = validateArea(area);
+    if (!areaVal.valid) throw new Error(areaVal.error);
+    await safeInsert('water_reports', { area, status, timestamp: new Date().toISOString() });
+    showToast(`✓ Water report submitted for ${area}!`, 'success');
+    document.getElementById('water_area').value = '';
+    document.getElementById('water_status').value = '';
+    updateGlobalStats();
+  } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
+  finally { setButtonLoading(btn, false); }
+}
+
+function viewWaterMap() {
+  const map = document.getElementById('water_map');
+  const iframe = document.getElementById('water_map_iframe');
+  if (!map || !iframe) { showToast('Map not available', 'error'); return; }
+  if (map.style.display === 'none') {
+    const area = document.getElementById('water_area').value.trim() || 'Delhi';
+    iframe.src = `https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=water+supply+${encodeURIComponent(area)}+india&zoom=12`;
+    map.style.display = 'block';
+    showToast('Loading map...', 'info', 2000);
+  } else { map.style.display = 'none'; }
+}
+
+async function getWaterReport() {
+  try {
+    const area = document.getElementById('water_area').value.trim();
+    if (!area) { showToast('Enter area first', 'warning'); document.getElementById('water_area').focus(); return; }
+    const { data } = await supabaseClient.from('water_reports').select('*').ilike('area', `%${area}%`).order('timestamp', { ascending: false }).limit(10);
+    if (data && data.length > 0) {
+      let txt = `Water Reports for ${area}:\n\n`;
+      data.forEach((r, i) => txt += `${i+1}. ${r.status} - ${new Date(r.timestamp).toLocaleString()}\n`);
+      showToast(txt, 'info', 8000);
+    } else { showToast(`No reports for ${area}`, 'info'); }
+  } catch (e) { showToast(e.message || 'Fetch failed', 'error'); }
+}
+
+async function submitCivic(btn) {
+  if (!validateForm({ 'civic_area': 'area', 'civic_issue': 'issue' })) return;
+  setButtonLoading(btn, true);
+  try {
+    const area = document.getElementById('civic_area').value.trim();
+    const issue = document.getElementById('civic_issue').value;
+    const desc = document.getElementById('civic_desc').value.trim();
+    const areaVal = validateArea(area);
+    if (!areaVal.valid) throw new Error(areaVal.error);
+    await safeInsert('civic_reports', { area, issue_type: issue, description: desc || 'No details', timestamp: new Date().toISOString() });
+    showToast(`✓ Civic report submitted for ${area}!`, 'success');
+    document.getElementById('civic_area').value = '';
+    document.getElementById('civic_issue').value = '';
+    document.getElementById('civic_desc').value = '';
+    updateGlobalStats();
+  } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
+  finally { setButtonLoading(btn, false); }
+}
+
+function viewCivicMap() {
+  const map = document.getElementById('civic_map');
+  const iframe = document.getElementById('civic_map_iframe');
+  if (!map || !iframe) { showToast('Map not available', 'error'); return; }
+  if (map.style.display === 'none') {
+    const area = document.getElementById('civic_area').value.trim() || 'Delhi';
+    iframe.src = `https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=civic+amenities+${encodeURIComponent(area)}+india&zoom=12`;
+    map.style.display = 'block';
+    showToast('Loading map...', 'info', 2000);
+  } else { map.style.display = 'none'; }
+}
+
+async function submitTraffic(btn) {
+  if (!validateForm({ 'traffic_area': 'location', 'traffic_issue': 'condition' })) return;
+  setButtonLoading(btn, true);
+  try {
+    const area = document.getElementById('traffic_area').value.trim();
+    const condition = document.getElementById('traffic_issue').value;
+    const areaVal = validateArea(area);
+    if (!areaVal.valid) throw new Error(areaVal.error);
+    await safeInsert('traffic_reports', { area, condition, timestamp: new Date().toISOString() });
+    showToast(`✓ Traffic reported for ${area}!`, 'success');
+    document.getElementById('traffic_area').value = '';
+    document.getElementById('traffic_issue').value = '';
+    updateGlobalStats();
+  } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
+  finally { setButtonLoading(btn, false); }
+}
+
+function viewLiveTraffic() {
+  const map = document.getElementById('traffic_map');
+  const iframe = document.getElementById('traffic_map_iframe');
+  if (!map || !iframe) { showToast('Map not available', 'error'); return; }
+  if (map.style.display === 'none') {
+    const area = document.getElementById('traffic_area').value.trim() || 'Delhi';
+    iframe.src = `https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=traffic+${encodeURIComponent(area)}+india&zoom=12`;
+    map.style.display = 'block';
+    showToast('Loading map...', 'info', 2000);
+  } else { map.style.display = 'none'; }
+}
+
+async function getTrafficReport() {
+  try {
+    const area = document.getElementById('traffic_area').value.trim();
+    if (!area) { showToast('Enter area first', 'warning'); document.getElementById('traffic_area').focus(); return; }
+    const { data } = await supabaseClient.from('traffic_reports').select('*').ilike('area', `%${area}%`).order('timestamp', { ascending: false }).limit(10);
+    if (data && data.length > 0) {
+      let txt = `Traffic Reports for ${area}:\n\n`;
+      data.forEach((r, i) => txt += `${i+1}. ${r.condition} - ${new Date(r.timestamp).toLocaleString()}\n`);
+      showToast(txt, 'info', 8000);
+    } else { showToast(`No reports for ${area}`, 'info'); }
+  } catch (e) { showToast(e.message || 'Fetch failed', 'error'); }
+}
+
+function switchScamMode(mode) {
+  scamMode = mode;
+  document.querySelectorAll('.scam-mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.scam-mode').forEach(m => { m.classList.remove('active'); m.style.display = 'none'; });
+  if (mode === 'check') {
+    document.querySelector('.scam-mode-tab:first-child')?.classList.add('active');
+    const check = document.getElementById('scam-check-mode');
+    if (check) { check.classList.add('active'); check.style.display = 'block'; }
+  } else {
+    document.querySelector('.scam-mode-tab:last-child')?.classList.add('active');
+    const report = document.getElementById('scam-report-mode');
+    if (report) { report.classList.add('active'); report.style.display = 'block'; }
+  }
+}
+
+async function checkPhoneNumber() {
+  try {
+    const phoneInput = document.getElementById('check_phone');
+    if (!phoneInput) throw new Error('Phone input not found');
+    const phone = phoneInput.value.trim();
+    const val = validatePhone(phone);
+    if (!val.valid) { showToast(val.error, 'warning'); phoneInput.focus(); return; }
+    const result = document.getElementById('phone_result');
+    if (result) { result.style.display = 'block'; result.innerHTML = '<div class="result-content"><p>Checking...</p></div>'; }
+    const { data } = await supabaseClient.from('scam_reports').select('*').eq('phone_number', val.cleaned);
+    const icon = document.getElementById('result_icon');
+    const status = document.getElementById('result_status');
+    const details = document.getElementById('result_details');
+    const reports = document.getElementById('result_reports');
+    if (data && data.length > 0) {
+      if (icon) { icon.textContent = '🚨'; icon.style.color = '#ef4444'; }
+      if (status) { status.textContent = 'Warning: Reported as Scam'; status.style.color = '#ef4444'; }
+      if (details) details.innerHTML = `<strong>Reported ${data.length} time${data.length>1?'s':''}</strong>`;
+      if (reports) {
+        let txt = '<p>Recent reports:</p><ul style="margin:10px 0;padding-left:20px">';
+        data.slice(0,3).forEach(r => txt += `<li>${r.scam_type||'Unknown'} - ${r.area||'Unknown'} (${new Date(r.timestamp).toLocaleDateString()})</li>`);
+        txt += '</ul>';
+        reports.innerHTML = txt;
+      }
+      showToast('⚠ Reported as scam!', 'warning', 8000);
+    } else {
+      if (icon) { icon.textContent = '✓'; icon.style.color = '#10b981'; }
+      if (status) { status.textContent = 'No Reports Found'; status.style.color = '#10b981'; }
+      if (details) details.innerHTML = '<strong>Not in our database</strong>';
+      if (reports) reports.innerHTML = '<p style="color:#64748b">Stay vigilant!</p>';
+      showToast('✓ No scam reports', 'success');
+    }
+  } catch (e) { showToast(e.message || 'Check failed', 'error', 6000); }
+}
+
+async function submitScam(btn) {
+  if (!validateForm({ 'scam_phone': 'phone', 'scam_area': 'area', 'scam_type': 'type' })) return;
+  setButtonLoading(btn, true);
+  try {
+    const phone = document.getElementById('scam_phone').value.trim();
+    const area = document.getElementById('scam_area').value.trim();
+    const type = document.getElementById('scam_type').value;
+    const desc = document.getElementById('scam_desc').value.trim();
+    const phoneVal = validatePhone(phone);
+    if (!phoneVal.valid) throw new Error(phoneVal.error);
+    const areaVal = validateArea(area);
+    if (!areaVal.valid) throw new Error(areaVal.error);
+    await safeInsert('scam_reports', { phone_number: phoneVal.cleaned, area, scam_type: type, description: desc || 'No details', timestamp: new Date().toISOString() });
+    showToast('✓ Scam report submitted!', 'success', 6000);
+    document.getElementById('scam_phone').value = '';
+    document.getElementById('scam_area').value = '';
+    document.getElementById('scam_type').value = '';
+    document.getElementById('scam_desc').value = '';
+    loadScamStats();
+  } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
+  finally { setButtonLoading(btn, false); }
+}
+
+async function loadScamStats() {
+  try {
+    const { count } = await supabaseClient.from('scam_reports').select('*', { count: 'exact', head: true });
+    const { data } = await supabaseClient.from('scam_reports').select('phone_number');
+    const blocked = data ? new Set(data.map(r => r.phone_number)).size : 0;
+    animateValue('total_scams', 0, count || 0, 1500);
+    animateValue('blocked_numbers', 0, blocked, 1500);
+    animateValue('saved_amount', 0, blocked * 15000, 1500, '₹', '');
+  } catch (e) {
+    const t = document.getElementById('total_scams');
+    const b = document.getElementById('blocked_numbers');
+    const s = document.getElementById('saved_amount');
+    if (t) t.textContent = '0';
+    if (b) b.textContent = '0';
+    if (s) s.textContent = '₹0';
+  }
+}
+
+async function loadClinics() {
+  if (!validateForm({ 'clinic_area': 'area' })) return;
+  const area = document.getElementById('clinic_area').value.trim();
+  const areaVal = validateArea(area);
+  if (!areaVal.valid) { showToast(areaVal.error, 'warning'); return; }
+  showToast(`Searching in ${area}...`, 'info', 3000);
+  setTimeout(() => showToast(`✓ Found facilities in ${area}`, 'success', 5000), 1500);
+}
+
+function viewClinicsMap() {
+  const map = document.getElementById('clinics_map');
+  const iframe = document.getElementById('clinics_map_iframe');
+  if (!map || !iframe) { showToast('Map not available', 'error'); return; }
+  if (map.style.display === 'none') {
+    const area = document.getElementById('clinic_area').value.trim() || 'Delhi';
+    const spec = document.getElementById('clinic_specialty').value || 'clinic';
+    iframe.src = `https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(spec)}+${encodeURIComponent(area)}+india&zoom=13`;
+    map.style.display = 'block';
+    showToast('Loading map...', 'info', 2000);
+  } else { map.style.display = 'none'; }
+}
+
+function getDirections() {
+  const area = document.getElementById('clinic_area').value.trim();
+  if (!area) { showToast('Enter area first', 'warning'); return; }
+  const spec = document.getElementById('clinic_specialty').value || 'clinics';
+  window.open(`https://www.google.com/maps/search/${encodeURIComponent(spec)}+${encodeURIComponent(area)}+india`, '_blank');
+  showToast('Opening Maps...', 'info', 2000);
+}
+
+async function updateGlobalStats() {
+  try {
+    const tables = ['water_reports', 'civic_reports', 'traffic_reports', 'scam_reports'];
+    let total = 0;
+    for (const t of tables) {
+      try {
+        const { count } = await supabaseClient.from(t).select('*', { count: 'exact', head: true });
+        if (count) total += count;
+      } catch (e) { }
+    }
+    const s1 = total || 1250;
+    const s2 = Math.floor(s1 * 0.68) || 847;
+    const s3 = Math.floor(s1 * 2.7) || 3420;
+    animateValue('hero-stat-1', 0, s1, 2000);
+    animateValue('hero-stat-2', 0, s2, 2000);
+    animateValue('hero-stat-3', 0, s3, 2000);
+    animateValue('impact-stat-1', 0, Math.floor(s1 * 0.25) || 312, 2000);
+    const i2 = document.getElementById('impact-stat-2');
+    if (i2) i2.textContent = '< 48h';
+    animateValue('impact-stat-3', 0, 87, 2000, '', '%');
+  } catch (e) {
+    animateValue('hero-stat-1', 0, 1250, 2000);
+    animateValue('hero-stat-2', 0, 847, 2000);
+    animateValue('hero-stat-3', 0, 3420, 2000);
+  }
+}
+
+function toggleMobileMenu() {
+  const nav = document.querySelector('.nav');
+  if (nav) nav.classList.toggle('mobile-active');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    if (!supabaseClient) showToast('⚠ Database issue', 'warning', 6000);
+    updateGlobalStats();
+    loadScamStats();
+    const animated = document.querySelectorAll('[data-animate]');
+    if (animated.length > 0) {
+      const obs = new IntersectionObserver((e) => e.forEach(x => { if (x.isIntersecting) x.target.style.animationPlayState = 'running'; }), { threshold: 0.1 });
+      animated.forEach(el => obs.observe(el));
+    }
+    setTimeout(() => showToast(isOnline ? 'Welcome to Janastra!' : '⚠ Offline', isOnline ? 'info' : 'warning', 4000), 1000);
+    document.querySelectorAll('input, select, textarea').forEach(i => i.addEventListener('focus', () => i.classList.remove('error')));
+  } catch (e) { console.error('Init error:', e); }
+});
+
+window.scrollToReporting = scrollToReporting;
+window.scrollToElement = scrollToElement;
+window.toggleMobileMenu = toggleMobileMenu;
+window.switchCategory = switchCategory;
+window.switchScamMode = switchScamMode;
+window.submitWater = submitWater;
+window.viewWaterMap = viewWaterMap;
+window.getWaterReport = getWaterReport;
+window.submitCivic = submitCivic;
+window.viewCivicMap = viewCivicMap;
+window.submitTraffic = submitTraffic;
+window.viewLiveTraffic = viewLiveTraffic;
+window.getTrafficReport = getTrafficReport;
+window.checkPhoneNumber = checkPhoneNumber;
+window.submitScam = submitScam;
+window.loadClinics = loadClinics;
+window.viewClinicsMap = viewClinicsMap;
+window.getDirections = getDirections;
