@@ -2,400 +2,810 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Janastra - Citizen Reporting Studio</title>
+  <title>Janastra - Citizen Reporting Platform</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Janastra blends community reporting with a studio-inspired civic experience." />
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Modern citizen reporting platform for community-driven urban solutions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-improved.css">
 </head>
-<body class="studio-page">
-  <a class="skip-link" href="#reporting">Skip to reporting</a>
-  <div class="particles" id="particles" aria-hidden="true"></div>
+<body>
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
-  <header class="studio-header">
-    <div class="brand">
-      <span class="brand-mark">✺</span>
-      <div>
-        <p class="brand-title">Janastra</p>
-        <p class="brand-subtitle">Citizen Reporting Studio</p>
+  <!-- Skip Navigation -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="brand-text">
+          <h1 class="brand-title">Janastra</h1>
+          <p class="brand-subtitle">Citizen Reporting</p>
+        </div>
       </div>
+      
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#impact" class="nav-link">Impact</a>
+        <a href="#reporting" class="nav-link">Report</a>
+      </nav>
+      
+      <button class="btn-primary btn-header" onclick="scrollToReporting()">
+        Start Reporting
+        <svg class="btn-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
-    <nav class="studio-nav">
-      <a href="#work">Work</a>
-      <a href="#services">Services</a>
-      <a href="#insights">Insights</a>
-      <a href="#reporting">Report</a>
-    </nav>
-    <button class="studio-cta" type="button" onclick="document.querySelector('#reporting').scrollIntoView({behavior: 'smooth'})">
-      Start a report
-    </button>
   </header>
 
-  <section class="studio-hero">
-    <div class="studio-hero-text">
-      <p class="studio-kicker">Civic design + live reporting</p>
-      <h1>Make the city feel heard.</h1>
-      <p class="studio-lead">
-        Janastra is a citizen-first reporting studio—pairing local knowledge with modern digital
-        workflows to keep neighborhoods safer, cleaner, and more connected.
-      </p>
-      <div class="studio-hero-actions">
-        <button class="cta-btn" type="button" onclick="document.querySelector('#reporting').scrollIntoView({behavior: 'smooth'})">
-          Launch reporting
-        </button>
-        <button class="secondary-btn" type="button" onclick="document.querySelector('#work').scrollIntoView({behavior: 'smooth'})">
-          View impact
-        </button>
-      </div>
-    </div>
-    <div class="studio-hero-card">
-      <div class="studio-card-row">
-        <span class="studio-chip">Since 2015</span>
-        <span class="studio-chip">City + Ward teams</span>
-      </div>
-      <p class="studio-card-title">Neighborhood signals</p>
-      <p class="studio-card-copy">
-        We translate citizen reports into clear action plans with responsive dashboards, civic
-        intelligence, and trusted community operators.
-      </p>
-      <div class="studio-card-metrics">
-        <div>
-          <p class="metric-value">48</p>
-          <p class="metric-label">Active wards</p>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <span class="hero-badge" data-animate>Community-Powered</span>
+        <h2 class="hero-title" data-animate>
+          Your Voice,<br/>
+          <span class="gradient-text">Your City</span>
+        </h2>
+        <p class="hero-description" data-animate>
+          Report civic issues, track solutions, and transform your neighborhood 
+          with real-time community engagement.
+        </p>
+        <div class="hero-actions" data-animate>
+          <button class="btn-primary btn-large" onclick="scrollToReporting()">
+            Report an Issue
+            <svg class="btn-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="btn-secondary btn-large" onclick="scrollToElement('#impact')">
+            View Impact
+          </button>
         </div>
-        <div>
-          <p class="metric-value">2.1k</p>
-          <p class="metric-label">Reports/week</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="studio-marquee">
-    <div class="marquee-track">
-      <span>Water + civic + traffic + scam protection + healthcare</span>
-      <span>Water + civic + traffic + scam protection + healthcare</span>
-    </div>
-  </section>
-
-  <section class="studio-work" id="work">
-    <div class="studio-section-header">
-      <h2>Featured civic work</h2>
-      <p>Modern reporting experiences informed by local traditions and people-powered insights.</p>
-    </div>
-    <div class="studio-work-grid">
-      <article class="studio-work-card">
-        <h3>Ward Pulse</h3>
-        <p>Real-time water and sanitation dashboards powered by citizen micro-reports.</p>
-      </article>
-      <article class="studio-work-card">
-        <h3>Roadwatch</h3>
-        <p>Traffic + road repair reports routed directly to engineers with heatmap summaries.</p>
-      </article>
-      <article class="studio-work-card">
-        <h3>Trustline</h3>
-        <p>Scam awareness hub that helps residents verify numbers before taking action.</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="studio-services" id="services">
-    <div class="studio-section-header">
-      <h2>Services with civic soul</h2>
-      <p>We blend legacy workflows with progressive tools for faster response.</p>
-    </div>
-    <div class="studio-services-grid">
-      <div class="studio-service">
-        <h3>Community intake</h3>
-        <p>Structured reporting that mirrors traditional ledger formats.</p>
-      </div>
-      <div class="studio-service">
-        <h3>Live mapping</h3>
-        <p>Instant visualizations for city teams and resident groups.</p>
-      </div>
-      <div class="studio-service">
-        <h3>Local care routing</h3>
-        <p>Clinic and safety alerts tailored to neighborhood needs.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="studio-insights" id="insights">
-    <div class="studio-section-header">
-      <h2>Insights + reporting notes</h2>
-      <p>Latest signals from civic contributors.</p>
-    </div>
-    <div class="studio-insights-grid">
-      <article>
-        <p class="insight-date">Update · 2 days ago</p>
-        <h3>Monsoon prep checklist for ward captains</h3>
-        <p>Key tasks to reduce water disruption and road hazards before heavy rains.</p>
-      </article>
-      <article>
-        <p class="insight-date">Playbook · 1 week ago</p>
-        <h3>How to identify scam call patterns</h3>
-        <p>Shared steps for residents to verify unknown numbers quickly.</p>
-      </article>
-      <article>
-        <p class="insight-date">Report · 3 weeks ago</p>
-        <h3>Citizen responses to traffic pulse surveys</h3>
-        <p>Highlights from 1,200 commuters on congestion hot spots.</p>
-      </article>
-    </div>
-  </section>
-
-  <main class="container" id="reporting">
-    <h2 class="section-title">Report. Track. Transform.</h2>
-
-    <div class="tabs" role="tablist" aria-label="Reporting categories">
-      <button class="tab active" id="tab-water" role="tab" aria-controls="water" aria-selected="true" tabindex="0" data-tab="water" type="button">💧 Water</button>
-      <button class="tab" id="tab-civic" role="tab" aria-controls="civic" aria-selected="false" tabindex="-1" data-tab="civic" type="button">🏠 Civic</button>
-      <button class="tab" id="tab-traffic" role="tab" aria-controls="traffic" aria-selected="false" tabindex="-1" data-tab="traffic" type="button">🚦 Traffic</button>
-      <button class="tab" id="tab-scam" role="tab" aria-controls="scam" aria-selected="false" tabindex="-1" data-tab="scam" type="button">🚨 Scam</button>
-      <button class="tab" id="tab-clinics" role="tab" aria-controls="clinics" aria-selected="false" tabindex="-1" data-tab="clinics" type="button">🏥 Clinics</button>
-    </div>
-
-    <!-- WATER -->
-    <section id="water" class="form-section active" role="tabpanel" aria-labelledby="tab-water" aria-hidden="false">
-      <h2>Water Availability</h2>
-      <div class="input-group">
-        <label for="water_area">Area/locality</label>
-        <input id="water_area" placeholder="Enter area/locality (e.g., Karol Bagh)" autocomplete="address-level2" />
-      </div>
-      <div class="input-group">
-        <label for="water_status">Water status</label>
-        <select id="water_status" class="custom-select">
-          <option value="">Select water status</option>
-          <option value="No water">🔴 No water</option>
-          <option value="Low pressure">🟡 Low pressure</option>
-          <option value="Normal">🟢 Normal</option>
-          <option value="Good pressure">🔵 Good pressure</option>
-        </select>
-      </div>
-      <button class="submit-btn" type="button" onclick="submitWater(this)">📤 Submit Report</button>
-      
-      <div class="action-buttons">
-        <button class="secondary-btn" type="button" onclick="viewWaterMap()">🗺️ View Water Map</button>
-        <button class="secondary-btn" type="button" onclick="checkWaterStatus()">🔍 Check Area Status</button>
-      </div>
-      
-      <div id="water_map" class="map-container" style="display:none;">
-        <iframe id="water_map_iframe" width="100%" height="450" frameborder="0" style="border:0; border-radius: 16px;"></iframe>
-      </div>
-    </section>
-
-    <!-- CIVIC -->
-    <section id="civic" class="form-section" role="tabpanel" aria-labelledby="tab-civic" aria-hidden="true">
-      <h2>Civic Issues</h2>
-      <div class="input-group">
-        <label for="civic_area">Area/locality</label>
-        <input id="civic_area" placeholder="Area/Locality" autocomplete="address-level2" />
-      </div>
-      <div class="input-group">
-        <label for="civic_category">Issue type</label>
-        <select id="civic_category" class="custom-select">
-          <option value="">Select issue type</option>
-          <option value="Garbage">🗑️ Garbage Collection</option>
-          <option value="Streetlight">💡 Streetlight</option>
-          <option value="Drainage">🚰 Drainage</option>
-          <option value="Road">🛣️ Road Repair</option>
-          <option value="Park">🌳 Park Maintenance</option>
-          <option value="Other">📋 Other</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label for="civic_desc">Description</label>
-        <textarea id="civic_desc" placeholder="Brief description of problem" rows="3"></textarea>
-      </div>
-      <button class="submit-btn" type="button" onclick="submitCivic(this)">📤 Submit Complaint</button>
-      
-      <div class="action-buttons">
-        <button class="secondary-btn" type="button" onclick="viewCivicMap()">🗺️ View Issues on Map</button>
-        <button class="secondary-btn" type="button" onclick="viewAreaIssues()">📊 Area Issues Report</button>
-      </div>
-      
-      <div id="civic_map" class="map-container" style="display:none;">
-        <iframe id="civic_map_iframe" width="100%" height="450" frameborder="0" style="border:0; border-radius: 16px;"></iframe>
-      </div>
-    </section>
-
-    <!-- TRAFFIC -->
-    <section id="traffic" class="form-section" role="tabpanel" aria-labelledby="tab-traffic" aria-hidden="true">
-      <h2>Live Traffic Updates</h2>
-      <div class="input-group">
-        <label for="traffic_area">Area/road name</label>
-        <input id="traffic_area" placeholder="Enter area/road name (e.g., Connaught Place)" autocomplete="address-level2" />
-      </div>
-      <div class="input-group">
-        <label for="traffic_issue">Traffic condition</label>
-        <select id="traffic_issue" class="custom-select">
-          <option value="">Select traffic condition</option>
-          <option value="Heavy jam">🔴 Heavy Traffic Jam</option>
-          <option value="Moderate traffic">🟡 Moderate Traffic</option>
-          <option value="Accident">⚠️ Accident</option>
-          <option value="Road closed">🚧 Road Closed</option>
-          <option value="Pothole">🕳️ Pothole/Road Damage</option>
-          <option value="Free flowing">🟢 Free Flowing</option>
-        </select>
-      </div>
-      <button class="submit-btn" type="button" onclick="submitTraffic(this)">📤 Report Traffic</button>
-      
-      <div class="action-buttons">
-        <button class="secondary-btn" type="button" onclick="viewLiveTraffic()">🚦 View Live Traffic Map</button>
-        <button class="secondary-btn" type="button" onclick="getTrafficReport()">📊 Get Area Traffic Report</button>
-      </div>
-      
-      <div id="traffic_map" class="map-container" style="display:none;">
-        <div class="traffic-legend">
-          <span><span class="legend-color" style="background: #30a14e;"></span> Light Traffic</span>
-          <span><span class="legend-color" style="background: #f1c40f;"></span> Moderate Traffic</span>
-          <span><span class="legend-color" style="background: #e67e22;"></span> Heavy Traffic</span>
-          <span><span class="legend-color" style="background: #c0392b;"></span> Severe Congestion</span>
-        </div>
-        <iframe id="traffic_map_iframe" width="100%" height="500" frameborder="0" style="border:0; border-radius: 16px;"></iframe>
-      </div>
-    </section>
-
-    <!-- SCAM -->
-    <section id="scam" class="form-section" role="tabpanel" aria-labelledby="tab-scam" aria-hidden="true">
-      <h2>Scam Alert System</h2>
-      
-      <div class="scam-tabs" role="tablist" aria-label="Scam tools">
-        <button class="scam-tab active" id="scam-tab-check" role="tab" aria-controls="scam_check" aria-selected="true" tabindex="0" type="button" onclick="showScamTab('check', this)">🔍 Check Number</button>
-        <button class="scam-tab" id="scam-tab-report" role="tab" aria-controls="scam_report" aria-selected="false" tabindex="-1" type="button" onclick="showScamTab('report', this)">🚨 Report Scam</button>
-      </div>
-      
-      <!-- Check Phone Number -->
-      <div id="scam_check" class="scam-section" aria-hidden="false">
-        <h3>Check if Phone Number is Safe</h3>
-        <div class="input-group">
-          <label for="check_phone">Phone number</label>
-          <input id="check_phone" type="tel" placeholder="Enter phone number (e.g., 9876543210)" maxlength="10" inputmode="numeric" autocomplete="tel" />
-          <p class="helper-text">We only store the number if you submit a report.</p>
-        </div>
-        <button class="submit-btn" type="button" onclick="checkPhoneNumber()">🔍 Check Number</button>
         
-        <div id="phone_result" class="phone-result" style="display:none;">
-          <div class="result-card">
-            <div id="result_icon"></div>
-            <div id="result_status"></div>
-            <div id="result_details"></div>
-            <div id="result_reports"></div>
+        <div class="hero-stats" data-animate>
+          <div class="stat-item">
+            <div class="stat-value" id="hero-stat-1">0</div>
+            <div class="stat-label">Reports Filed</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-value" id="hero-stat-2">0</div>
+            <div class="stat-label">Issues Resolved</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-value" id="hero-stat-3">0</div>
+            <div class="stat-label">Active Citizens</div>
           </div>
         </div>
       </div>
       
-      <!-- Report Scam -->
-      <div id="scam_report" class="scam-section" style="display:none;" aria-hidden="true">
-        <h3>Report a Scam</h3>
-        <div class="input-group">
-          <label for="scam_phone">Scammer's phone number</label>
-          <input id="scam_phone" type="tel" placeholder="Scammer's phone number" maxlength="10" inputmode="numeric" autocomplete="tel" />
+      <div class="hero-visual" data-animate>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <span class="status-dot"></span>
+            <span class="status-text">Live Reporting</span>
+          </div>
+          <div class="hero-card-content">
+            <div class="report-item">
+              <div class="report-icon water-icon">💧</div>
+              <div class="report-info">
+                <div class="report-title">Water Supply Issue</div>
+                <div class="report-location">Karol Bagh, Delhi</div>
+              </div>
+              <span class="report-status status-pending">Pending</span>
+            </div>
+            <div class="report-item">
+              <div class="report-icon traffic-icon">🚦</div>
+              <div class="report-info">
+                <div class="report-title">Traffic Congestion</div>
+                <div class="report-location">Connaught Place</div>
+              </div>
+              <span class="report-status status-resolved">Resolved</span>
+            </div>
+            <div class="report-item">
+              <div class="report-icon civic-icon">🏠</div>
+              <div class="report-info">
+                <div class="report-title">Street Light Out</div>
+                <div class="report-location">Vasant Vihar</div>
+              </div>
+              <span class="report-status status-progress">In Progress</span>
+            </div>
+          </div>
         </div>
-        <div class="input-group">
-          <label for="scam_area">Your area/city</label>
-          <input id="scam_area" placeholder="Your area/city" autocomplete="address-level2" />
-        </div>
-        <div class="input-group">
-          <label for="scam_type">Scam type</label>
-          <select id="scam_type" class="custom-select">
-            <option value="">Select scam type</option>
-            <option value="UPI Fraud">💳 UPI/Payment Fraud</option>
-            <option value="Call Scam">📞 Fake Call (Bank/Police/Court)</option>
-            <option value="SMS Scam">💬 SMS Scam</option>
-            <option value="Lottery">🎰 Lottery/Prize Scam</option>
-            <option value="Job Scam">💼 Fake Job Offer</option>
-            <option value="OTP Scam">🔐 OTP Theft</option>
-            <option value="Other">📋 Other</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label for="scam_desc">What happened</label>
-          <textarea id="scam_desc" placeholder="Describe what happened (details help protect others)" rows="4"></textarea>
-        </div>
-        <button class="submit-btn" type="button" onclick="submitScam(this)">🚨 Report Scam</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">What We Offer</span>
+        <h2 class="section-title">Comprehensive Reporting Suite</h2>
+        <p class="section-description">
+          From water supply to traffic conditions, report any civic issue 
+          and track its resolution in real-time.
+        </p>
       </div>
       
-      <div class="scam-stats">
-        <div class="scam-stat">
-          <div class="stat-num" id="total_scams">0</div>
-          <div class="stat-text">Total Reports</div>
+      <div class="features-grid">
+        <div class="feature-card" data-animate>
+          <div class="feature-icon water-gradient">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.69L17.66 8.35C20.78 11.47 20.78 16.53 17.66 19.65C14.54 22.77 9.46 22.77 6.34 19.65C3.22 16.53 3.22 11.47 6.34 8.35L12 2.69Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Water Availability</h3>
+          <p class="feature-description">
+            Report water supply issues, pressure problems, and track restoration timelines with real-time mapping.
+          </p>
         </div>
-        <div class="scam-stat">
-          <div class="stat-num" id="blocked_numbers">0</div>
-          <div class="stat-text">Blocked Numbers</div>
+        
+        <div class="feature-card" data-animate>
+          <div class="feature-icon civic-gradient">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Civic Infrastructure</h3>
+          <p class="feature-description">
+            Report street lights, potholes, garbage collection, and other urban infrastructure issues.
+          </p>
         </div>
-        <div class="scam-stat">
-          <div class="stat-num" id="saved_amount">₹0</div>
-          <div class="stat-text">Money Saved</div>
+        
+        <div class="feature-card" data-animate>
+          <div class="feature-icon traffic-gradient">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="6" r="2" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="18" r="2" stroke="currentColor" stroke-width="2"/>
+              <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Traffic Updates</h3>
+          <p class="feature-description">
+            Live traffic conditions, accident reports, and road closures with intelligent route suggestions.
+          </p>
+        </div>
+        
+        <div class="feature-card" data-animate>
+          <div class="feature-icon scam-gradient">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="16" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Scam Protection</h3>
+          <p class="feature-description">
+            Check phone numbers, report scams, and protect your community from fraud with our database.
+          </p>
+        </div>
+        
+        <div class="feature-card" data-animate>
+          <div class="feature-icon health-gradient">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3H21V21H3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Healthcare Locator</h3>
+          <p class="feature-description">
+            Find nearby clinics, hospitals, and specialists with directions and availability information.
+          </p>
+        </div>
+        
+        <div class="feature-card" data-animate>
+          <div class="feature-icon realtime-gradient">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Real-Time Tracking</h3>
+          <p class="feature-description">
+            Track your reports, get status updates, and see community-wide trends on interactive dashboards.
+          </p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- CLINICS -->
-    <section id="clinics" class="form-section" role="tabpanel" aria-labelledby="tab-clinics" aria-hidden="true">
-      <h2>Find Healthcare Nearby</h2>
-      <div class="input-group">
-        <label for="clinic_area">Area/locality</label>
-        <input id="clinic_area" placeholder="Enter your area/locality" autocomplete="address-level2" />
+  <!-- How It Works -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Simple Process</span>
+        <h2 class="section-title">How Janastra Works</h2>
       </div>
-      <div class="input-group">
-        <label for="clinic_specialty">Specialty</label>
-        <select id="clinic_specialty" class="custom-select">
-          <option value="">Any specialty</option>
-          <option value="General">🏥 General Physician</option>
-          <option value="Dentist">🦷 Dentist</option>
-          <option value="Pediatric">👶 Pediatric</option>
-          <option value="Orthopedic">🦴 Orthopedic</option>
-          <option value="Cardiology">❤️ Cardiology</option>
-          <option value="ENT">👂 ENT</option>
-          <option value="Dermatology">🧴 Dermatology</option>
-          <option value="Emergency">🚑 24/7 Emergency</option>
-        </select>
-      </div>
-      <button class="submit-btn" type="button" onclick="loadClinics()">🔍 Find Clinics</button>
       
-      <div class="action-buttons">
-        <button class="secondary-btn" type="button" onclick="viewClinicsMap()">🗺️ View on Map</button>
-        <button class="secondary-btn" type="button" onclick="getDirections()">🧭 Get Directions</button>
+      <div class="steps-container">
+        <div class="step" data-animate>
+          <div class="step-number">01</div>
+          <h3 class="step-title">Report the Issue</h3>
+          <p class="step-description">
+            Select a category and provide details about the civic issue you've encountered.
+          </p>
+        </div>
+        
+        <div class="step-connector"></div>
+        
+        <div class="step" data-animate>
+          <div class="step-number">02</div>
+          <h3 class="step-title">Real-Time Tracking</h3>
+          <p class="step-description">
+            Monitor your report's status and receive updates as authorities take action.
+          </p>
+        </div>
+        
+        <div class="step-connector"></div>
+        
+        <div class="step" data-animate>
+          <div class="step-number">03</div>
+          <h3 class="step-title">Resolution</h3>
+          <p class="step-description">
+            See the impact as issues get resolved and your community becomes better.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Section -->
+  <section class="impact" id="impact">
+    <div class="section-container">
+      <div class="impact-content">
+        <div class="impact-text">
+          <span class="section-badge">Community Impact</span>
+          <h2 class="section-title">Real Results, Real Change</h2>
+          <p class="impact-description">
+            Our platform has empowered thousands of citizens to make their voices heard 
+            and create tangible improvements in their communities.
+          </p>
+          
+          <div class="impact-stats">
+            <div class="impact-stat">
+              <div class="impact-stat-value" id="impact-stat-1">0</div>
+              <div class="impact-stat-label">Reports This Month</div>
+            </div>
+            <div class="impact-stat">
+              <div class="impact-stat-value" id="impact-stat-2">0</div>
+              <div class="impact-stat-label">Average Response Time</div>
+            </div>
+            <div class="impact-stat">
+              <div class="impact-stat-value" id="impact-stat-3">0</div>
+              <div class="impact-stat-label">Success Rate</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="impact-visual">
+          <div class="impact-card">
+            <div class="impact-card-header">
+              <span class="impact-badge">This Week</span>
+            </div>
+            <div class="impact-chart">
+              <div class="chart-bar" style="height: 60%;" data-label="Mon"></div>
+              <div class="chart-bar" style="height: 75%;" data-label="Tue"></div>
+              <div class="chart-bar" style="height: 45%;" data-label="Wed"></div>
+              <div class="chart-bar" style="height: 90%;" data-label="Thu"></div>
+              <div class="chart-bar" style="height: 80%;" data-label="Fri"></div>
+              <div class="chart-bar" style="height: 55%;" data-label="Sat"></div>
+              <div class="chart-bar" style="height: 40%;" data-label="Sun"></div>
+            </div>
+            <div class="impact-card-footer">
+              <span class="trend-up">↑ 23%</span>
+              <span class="trend-text">vs last week</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Reporting Section -->
+  <main class="reporting-section" id="reporting">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Start Reporting</span>
+        <h2 class="section-title">Report a Civic Issue</h2>
+        <p class="section-description">
+          Choose a category below and help make your community better
+        </p>
       </div>
       
-      <div id="clinics_map" class="map-container" style="display:none;">
-        <iframe id="clinics_map_iframe" width="100%" height="450" frameborder="0" style="border:0; border-radius: 16px;"></iframe>
+      <!-- Category Tabs -->
+      <div class="category-tabs" role="tablist" aria-label="Report categories">
+        <button class="category-tab active" role="tab" aria-selected="true" data-category="water" onclick="switchCategory('water')">
+          <span class="tab-icon">💧</span>
+          <span class="tab-label">Water</span>
+        </button>
+        <button class="category-tab" role="tab" aria-selected="false" data-category="civic" onclick="switchCategory('civic')">
+          <span class="tab-icon">🏠</span>
+          <span class="tab-label">Civic</span>
+        </button>
+        <button class="category-tab" role="tab" aria-selected="false" data-category="traffic" onclick="switchCategory('traffic')">
+          <span class="tab-icon">🚦</span>
+          <span class="tab-label">Traffic</span>
+        </button>
+        <button class="category-tab" role="tab" aria-selected="false" data-category="scam" onclick="switchCategory('scam')">
+          <span class="tab-icon">🚨</span>
+          <span class="tab-label">Scam Alert</span>
+        </button>
+        <button class="category-tab" role="tab" aria-selected="false" data-category="clinics" onclick="switchCategory('clinics')">
+          <span class="tab-icon">🏥</span>
+          <span class="tab-label">Healthcare</span>
+        </button>
       </div>
-    </section>
-
-    <div id="output" class="output" role="status" aria-live="polite">Ready to help your community...</div>
-
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-number" id="stat1">0</div>
-        <div class="stat-label">Reports Submitted</div>
+      
+      <!-- Water Report Form -->
+      <div class="report-form active" id="form-water" role="tabpanel">
+        <div class="form-container">
+          <h3 class="form-title">Water Availability Report</h3>
+          
+          <div class="form-group">
+            <label for="water_area" class="form-label">Area / Locality</label>
+            <input 
+              type="text" 
+              id="water_area" 
+              class="form-input" 
+              placeholder="e.g., Karol Bagh, Delhi"
+              autocomplete="address-level2"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="water_status" class="form-label">Water Status</label>
+            <select id="water_status" class="form-select">
+              <option value="">Select status</option>
+              <option value="No water">🔴 No Water Available</option>
+              <option value="Low pressure">🟡 Low Pressure</option>
+              <option value="Normal">🟢 Normal Supply</option>
+              <option value="Good pressure">🔵 Good Pressure</option>
+            </select>
+          </div>
+          
+          <button class="btn-primary btn-full" onclick="submitWater(this)">
+            <span class="btn-text">Submit Water Report</span>
+            <span class="btn-loader" style="display: none;">
+              <svg class="spinner" viewBox="0 0 24 24">
+                <circle class="spinner-circle" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
+              </svg>
+            </span>
+          </button>
+          
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="viewWaterMap()">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none">
+                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              View Water Map
+            </button>
+            <button class="btn-secondary" onclick="getWaterReport()">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Get Area Report
+            </button>
+          </div>
+          
+          <div id="water_map" class="map-container" style="display:none;">
+            <iframe id="water_map_iframe" width="100%" height="450" frameborder="0"></iframe>
+          </div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="stat2">0</div>
-        <div class="stat-label">Issues Resolved</div>
+      
+      <!-- Civic Report Form -->
+      <div class="report-form" id="form-civic" role="tabpanel" style="display:none;">
+        <div class="form-container">
+          <h3 class="form-title">Civic Infrastructure Report</h3>
+          
+          <div class="form-group">
+            <label for="civic_area" class="form-label">Area / Locality</label>
+            <input 
+              type="text" 
+              id="civic_area" 
+              class="form-input" 
+              placeholder="e.g., Connaught Place, Delhi"
+              autocomplete="address-level2"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="civic_issue" class="form-label">Issue Type</label>
+            <select id="civic_issue" class="form-select">
+              <option value="">Select issue type</option>
+              <option value="Street light">💡 Street Light Issue</option>
+              <option value="Pothole">🕳️ Pothole / Road Damage</option>
+              <option value="Garbage">🗑️ Garbage Collection</option>
+              <option value="Drainage">🚰 Drainage Problem</option>
+              <option value="Park maintenance">🌳 Park Maintenance</option>
+              <option value="Other">📋 Other</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="civic_desc" class="form-label">Description</label>
+            <textarea 
+              id="civic_desc" 
+              class="form-textarea" 
+              rows="4" 
+              placeholder="Please provide details about the issue..."
+            ></textarea>
+          </div>
+          
+          <button class="btn-primary btn-full" onclick="submitCivic(this)">
+            <span class="btn-text">Submit Civic Report</span>
+            <span class="btn-loader" style="display: none;">
+              <svg class="spinner" viewBox="0 0 24 24">
+                <circle class="spinner-circle" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
+              </svg>
+            </span>
+          </button>
+          
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="viewCivicMap()">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none">
+                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              View Issues Map
+            </button>
+          </div>
+          
+          <div id="civic_map" class="map-container" style="display:none;">
+            <iframe id="civic_map_iframe" width="100%" height="450" frameborder="0"></iframe>
+          </div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="stat3">0</div>
-        <div class="stat-label">Active Citizens</div>
+      
+      <!-- Traffic Report Form -->
+      <div class="report-form" id="form-traffic" role="tabpanel" style="display:none;">
+        <div class="form-container">
+          <h3 class="form-title">Traffic Condition Report</h3>
+          
+          <div class="form-group">
+            <label for="traffic_area" class="form-label">Location / Road Name</label>
+            <input 
+              type="text" 
+              id="traffic_area" 
+              class="form-input" 
+              placeholder="e.g., Ring Road, Delhi"
+              autocomplete="address-level2"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="traffic_issue" class="form-label">Traffic Condition</label>
+            <select id="traffic_issue" class="form-select">
+              <option value="">Select condition</option>
+              <option value="Heavy jam">🔴 Heavy Traffic Jam</option>
+              <option value="Moderate traffic">🟡 Moderate Traffic</option>
+              <option value="Accident">⚠️ Accident</option>
+              <option value="Road closed">🚧 Road Closed</option>
+              <option value="Pothole">🕳️ Pothole / Road Damage</option>
+              <option value="Free flowing">🟢 Free Flowing</option>
+            </select>
+          </div>
+          
+          <button class="btn-primary btn-full" onclick="submitTraffic(this)">
+            <span class="btn-text">Submit Traffic Report</span>
+            <span class="btn-loader" style="display: none;">
+              <svg class="spinner" viewBox="0 0 24 24">
+                <circle class="spinner-circle" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
+              </svg>
+            </span>
+          </button>
+          
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="viewLiveTraffic()">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="6" r="2" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="18" r="2" stroke="currentColor" stroke-width="2"/>
+                <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              Live Traffic Map
+            </button>
+            <button class="btn-secondary" onclick="getTrafficReport()">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Area Report
+            </button>
+          </div>
+          
+          <div id="traffic_map" class="map-container" style="display:none;">
+            <div class="traffic-legend">
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #10b981;"></span>
+                <span>Light Traffic</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #f59e0b;"></span>
+                <span>Moderate</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #ef4444;"></span>
+                <span>Heavy Jam</span>
+              </div>
+            </div>
+            <iframe id="traffic_map_iframe" width="100%" height="450" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Scam Alert Form -->
+      <div class="report-form" id="form-scam" role="tabpanel" style="display:none;">
+        <div class="form-container">
+          <h3 class="form-title">Scam Alert System</h3>
+          
+          <div class="scam-mode-tabs">
+            <button class="scam-mode-tab active" onclick="switchScamMode('check')">
+              🔍 Check Number
+            </button>
+            <button class="scam-mode-tab" onclick="switchScamMode('report')">
+              🚨 Report Scam
+            </button>
+          </div>
+          
+          <!-- Check Number Mode -->
+          <div id="scam-check-mode" class="scam-mode active">
+            <div class="form-group">
+              <label for="check_phone" class="form-label">Phone Number</label>
+              <input 
+                type="tel" 
+                id="check_phone" 
+                class="form-input" 
+                placeholder="Enter 10-digit number"
+                maxlength="10"
+                inputmode="numeric"
+                autocomplete="tel"
+              />
+              <p class="form-hint">We only store numbers if you submit a report</p>
+            </div>
+            
+            <button class="btn-primary btn-full" onclick="checkPhoneNumber()">
+              <span class="btn-text">Check Number Safety</span>
+              <span class="btn-loader" style="display: none;">
+                <svg class="spinner" viewBox="0 0 24 24">
+                  <circle class="spinner-circle" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
+                </svg>
+              </span>
+            </button>
+            
+            <div id="phone_result" class="phone-result" style="display:none;">
+              <div class="result-content">
+                <div id="result_icon" class="result-icon"></div>
+                <div id="result_status" class="result-status"></div>
+                <div id="result_details" class="result-details"></div>
+                <div id="result_reports" class="result-reports"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Report Scam Mode -->
+          <div id="scam-report-mode" class="scam-mode" style="display:none;">
+            <div class="form-group">
+              <label for="scam_phone" class="form-label">Scammer's Phone Number</label>
+              <input 
+                type="tel" 
+                id="scam_phone" 
+                class="form-input" 
+                placeholder="Enter 10-digit number"
+                maxlength="10"
+                inputmode="numeric"
+                autocomplete="tel"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="scam_area" class="form-label">Your Area / City</label>
+              <input 
+                type="text" 
+                id="scam_area" 
+                class="form-input" 
+                placeholder="e.g., Delhi"
+                autocomplete="address-level2"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="scam_type" class="form-label">Scam Type</label>
+              <select id="scam_type" class="form-select">
+                <option value="">Select scam type</option>
+                <option value="UPI Fraud">💳 UPI / Payment Fraud</option>
+                <option value="Call Scam">📞 Fake Call (Bank/Police)</option>
+                <option value="SMS Scam">💬 SMS Scam</option>
+                <option value="Lottery">🎰 Lottery / Prize Scam</option>
+                <option value="Job Scam">💼 Fake Job Offer</option>
+                <option value="OTP Scam">🔐 OTP Theft</option>
+                <option value="Other">📋 Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="scam_desc" class="form-label">What Happened</label>
+              <textarea 
+                id="scam_desc" 
+                class="form-textarea" 
+                rows="4" 
+                placeholder="Describe the scam attempt (details help protect others)..."
+              ></textarea>
+            </div>
+            
+            <button class="btn-primary btn-full" onclick="submitScam(this)">
+              <span class="btn-text">Report This Scam</span>
+              <span class="btn-loader" style="display: none;">
+                <svg class="spinner" viewBox="0 0 24 24">
+                  <circle class="spinner-circle" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          
+          <!-- Scam Statistics -->
+          <div class="scam-stats">
+            <div class="scam-stat-card">
+              <div class="scam-stat-value" id="total_scams">0</div>
+              <div class="scam-stat-label">Total Reports</div>
+            </div>
+            <div class="scam-stat-card">
+              <div class="scam-stat-value" id="blocked_numbers">0</div>
+              <div class="scam-stat-label">Blocked Numbers</div>
+            </div>
+            <div class="scam-stat-card">
+              <div class="scam-stat-value" id="saved_amount">₹0</div>
+              <div class="scam-stat-label">Money Saved</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Healthcare Finder Form -->
+      <div class="report-form" id="form-clinics" role="tabpanel" style="display:none;">
+        <div class="form-container">
+          <h3 class="form-title">Find Healthcare Nearby</h3>
+          
+          <div class="form-group">
+            <label for="clinic_area" class="form-label">Area / Locality</label>
+            <input 
+              type="text" 
+              id="clinic_area" 
+              class="form-input" 
+              placeholder="e.g., Saket, Delhi"
+              autocomplete="address-level2"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="clinic_specialty" class="form-label">Specialty</label>
+            <select id="clinic_specialty" class="form-select">
+              <option value="">Any specialty</option>
+              <option value="General">🏥 General Physician</option>
+              <option value="Dentist">🦷 Dentist</option>
+              <option value="Pediatric">👶 Pediatric</option>
+              <option value="Orthopedic">🦴 Orthopedic</option>
+              <option value="Cardiology">❤️ Cardiology</option>
+              <option value="ENT">👂 ENT</option>
+              <option value="Dermatology">🧴 Dermatology</option>
+              <option value="Emergency">🚑 24/7 Emergency</option>
+            </select>
+          </div>
+          
+          <button class="btn-primary btn-full" onclick="loadClinics()">
+            <span class="btn-text">Find Healthcare Facilities</span>
+            <span class="btn-loader" style="display: none;">
+              <svg class="spinner" viewBox="0 0 24 24">
+                <circle class="spinner-circle" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
+              </svg>
+            </span>
+          </button>
+          
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="viewClinicsMap()">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none">
+                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              View on Map
+            </button>
+            <button class="btn-secondary" onclick="getDirections()">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none">
+                <path d="M9 11L12 14L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 12V19C21 19.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V6C3 5.46957 3.21071 4.96086 3.58579 4.58579C3.96086 4.21071 4.46957 4 5 4H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Get Directions
+            </button>
+          </div>
+          
+          <div id="clinics_map" class="map-container" style="display:none;">
+            <iframe id="clinics_map_iframe" width="100%" height="450" frameborder="0"></iframe>
+          </div>
+        </div>
       </div>
     </div>
   </main>
 
-  <footer class="studio-footer">
-    <div>
-      <h3>Janastra Studio</h3>
-      <p>Citizen reporting tools shaped by local voices.</p>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand">
+          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <h3 class="brand-title">Janastra</h3>
+            <p class="brand-subtitle">Citizen Reporting</p>
+          </div>
+        </div>
+        <p class="footer-description">
+          Empowering communities through transparent, efficient civic reporting and real-time issue resolution.
+        </p>
+      </div>
+      
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4 class="footer-heading">Platform</h4>
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#impact">Impact</a>
+          <a href="#reporting">Start Reporting</a>
+        </div>
+        
+        <div class="footer-column">
+          <h4 class="footer-heading">Resources</h4>
+          <a href="#help">Help Center</a>
+          <a href="#api">API Docs</a>
+          <a href="#guidelines">Guidelines</a>
+          <a href="#privacy">Privacy Policy</a>
+        </div>
+        
+        <div class="footer-column">
+          <h4 class="footer-heading">Connect</h4>
+          <a href="#community">Community</a>
+          <a href="#support">Support</a>
+          <a href="#feedback">Feedback</a>
+          <a href="#contact">Contact Us</a>
+        </div>
+      </div>
     </div>
-    <div class="footer-links">
-      <a href="#services">Services</a>
-      <a href="#insights">Insights</a>
-      <a href="#reporting">Report</a>
+    
+    <div class="footer-bottom">
+      <p>© 2024 Janastra. Built with care for every community.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter">Twitter</a>
+        <a href="#" aria-label="GitHub">GitHub</a>
+        <a href="#" aria-label="LinkedIn">LinkedIn</a>
+      </div>
     </div>
-    <p class="footer-note">© 2024 Janastra. Built with care for every neighborhood.</p>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js"></script>
+  <script src="app-improved.js"></script>
 </body>
 </html>
