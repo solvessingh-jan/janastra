@@ -100,17 +100,21 @@ function switchCategory(cat) {
 }
 
 async function submitWater(btn) {
-  if (!validateForm({ 'water_area': 'area', 'water_status': 'status' })) return;
+  if (!validateForm({ 'water_area': 'area', 'water_status': 'status', 'water_phone': 'phone number' })) return;
   setButtonLoading(btn, true);
   try {
     const area = document.getElementById('water_area').value.trim();
     const status = document.getElementById('water_status').value;
+    const phone = document.getElementById('water_phone').value.trim();
     const areaVal = validateArea(area);
     if (!areaVal.valid) throw new Error(areaVal.error);
-    await safeInsert('water_reports', { area, status, timestamp: new Date().toISOString() });
+    const phoneVal = validatePhone(phone);
+    if (!phoneVal.valid) throw new Error(phoneVal.error);
+    await safeInsert('water_reports', { area, status, phone_number: phoneVal.cleaned, timestamp: new Date().toISOString() });
     showToast(`✓ Water report submitted for ${area}!`, 'success');
     document.getElementById('water_area').value = '';
     document.getElementById('water_status').value = '';
+    document.getElementById('water_phone').value = '';
     updateGlobalStats();
   } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
   finally { setButtonLoading(btn, false); }
@@ -142,19 +146,23 @@ async function getWaterReport() {
 }
 
 async function submitCivic(btn) {
-  if (!validateForm({ 'civic_area': 'area', 'civic_issue': 'issue' })) return;
+  if (!validateForm({ 'civic_area': 'area', 'civic_issue': 'issue', 'civic_phone': 'phone number' })) return;
   setButtonLoading(btn, true);
   try {
     const area = document.getElementById('civic_area').value.trim();
     const issue = document.getElementById('civic_issue').value;
     const desc = document.getElementById('civic_desc').value.trim();
+    const phone = document.getElementById('civic_phone').value.trim();
     const areaVal = validateArea(area);
     if (!areaVal.valid) throw new Error(areaVal.error);
-    await safeInsert('civic_reports', { area, issue_type: issue, description: desc || 'No details', timestamp: new Date().toISOString() });
+    const phoneVal = validatePhone(phone);
+    if (!phoneVal.valid) throw new Error(phoneVal.error);
+    await safeInsert('civic_reports', { area, issue_type: issue, description: desc || 'No details', phone_number: phoneVal.cleaned, timestamp: new Date().toISOString() });
     showToast(`✓ Civic report submitted for ${area}!`, 'success');
     document.getElementById('civic_area').value = '';
     document.getElementById('civic_issue').value = '';
     document.getElementById('civic_desc').value = '';
+    document.getElementById('civic_phone').value = '';
     updateGlobalStats();
   } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
   finally { setButtonLoading(btn, false); }
@@ -243,12 +251,17 @@ async function checkPhoneNumber() {
     const status = document.getElementById('result_status');
     const details = document.getElementById('result_details');
     const reports = document.getElementById('result_reports');
+    
     if (data && data.length > 0) {
+      // Get unique reporter names
+      const names = [...new Set(data.map(r => r.reporter_name).filter(n => n))];
+      const nameDisplay = names.length > 0 ? names.join(', ') : 'Unknown';
+      
       if (icon) { icon.textContent = '🚨'; icon.style.color = '#ef4444'; }
       if (status) { status.textContent = 'Warning: Reported as Scam'; status.style.color = '#ef4444'; }
-      if (details) details.innerHTML = `<strong>Reported ${data.length} time${data.length>1?'s':''}</strong>`;
+      if (details) details.innerHTML = `<strong>Reported ${data.length} time${data.length>1?'s':''}</strong><br><small>Reported by: ${nameDisplay}</small>`;
       if (reports) {
-        let txt = '<p>Recent reports:</p><ul style="margin:10px 0;padding-left:20px">';
+        let txt = '<p><strong>Recent reports:</strong></p><ul style="margin:10px 0;padding-left:20px">';
         data.slice(0,3).forEach(r => txt += `<li>${r.scam_type||'Unknown'} - ${r.area||'Unknown'} (${new Date(r.timestamp).toLocaleDateString()})</li>`);
         txt += '</ul>';
         reports.innerHTML = txt;
@@ -257,7 +270,7 @@ async function checkPhoneNumber() {
     } else {
       if (icon) { icon.textContent = '✓'; icon.style.color = '#10b981'; }
       if (status) { status.textContent = 'No Reports Found'; status.style.color = '#10b981'; }
-      if (details) details.innerHTML = '<strong>Not in our database</strong>';
+      if (details) details.innerHTML = '<strong>Not in our database</strong><br><small>This number appears clean</small>';
       if (reports) reports.innerHTML = '<p style="color:#64748b">Stay vigilant!</p>';
       showToast('✓ No scam reports', 'success');
     }
@@ -265,23 +278,25 @@ async function checkPhoneNumber() {
 }
 
 async function submitScam(btn) {
-  if (!validateForm({ 'scam_phone': 'phone', 'scam_area': 'area', 'scam_type': 'type' })) return;
+  if (!validateForm({ 'scam_phone': 'phone', 'scam_area': 'area', 'scam_type': 'type', 'scam_name': 'your name' })) return;
   setButtonLoading(btn, true);
   try {
     const phone = document.getElementById('scam_phone').value.trim();
     const area = document.getElementById('scam_area').value.trim();
     const type = document.getElementById('scam_type').value;
     const desc = document.getElementById('scam_desc').value.trim();
+    const name = document.getElementById('scam_name').value.trim();
     const phoneVal = validatePhone(phone);
     if (!phoneVal.valid) throw new Error(phoneVal.error);
     const areaVal = validateArea(area);
     if (!areaVal.valid) throw new Error(areaVal.error);
-    await safeInsert('scam_reports', { phone_number: phoneVal.cleaned, area, scam_type: type, description: desc || 'No details', timestamp: new Date().toISOString() });
+    await safeInsert('scam_reports', { phone_number: phoneVal.cleaned, area, scam_type: type, description: desc || 'No details', reporter_name: name, timestamp: new Date().toISOString() });
     showToast('✓ Scam report submitted!', 'success', 6000);
     document.getElementById('scam_phone').value = '';
     document.getElementById('scam_area').value = '';
     document.getElementById('scam_type').value = '';
     document.getElementById('scam_desc').value = '';
+    document.getElementById('scam_name').value = '';
     loadScamStats();
   } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
   finally { setButtonLoading(btn, false); }
