@@ -3,7 +3,7 @@
 // ================================
 
 const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MjU4MjMsImV4cCI6MjA0NzQwMTgyM30.tK95wQr1Lf4mLJQSdWHVuQ_52Mag0';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjQ2NzEsImV4cCI6MjA4MjcwMDY3MX0.g5NA4Anqj9j0urX2oMtU2WDL4mtFDkI2WhV27iN-Jko';
 
 let supabaseClient = null;
 try {
