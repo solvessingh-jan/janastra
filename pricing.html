@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Janastra – Plans & Pricing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy: #0d1b2a;
+      --teal: #00b4a6;
+      --teal-light: #00d9c8;
+      --amber: #f4a228;
+      --white: #f8fafc;
+      --muted: #8fa3b1;
+      --card-bg: #111f2e;
+      --border: rgba(0,180,166,0.18);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+```
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 5vw;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,27,42,0.92);
+  backdrop-filter: blur(12px);
+}
+.logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--teal); letter-spacing: -0.5px; }
+.logo span { color: var(--amber); }
+nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; margin-left: 2rem; transition: color .2s; }
+nav a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--teal); color: var(--navy) !important;
+  padding: .45rem 1.1rem; border-radius: 6px; font-weight: 600;
+  margin-left: 2rem;
+}
+.nav-cta:hover { background: var(--teal-light); }
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 6rem 5vw 4rem;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 400px;
+  background: radial-gradient(ellipse at center, rgba(0,180,166,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.badge {
+  display: inline-block;
+  background: rgba(0,180,166,0.12);
+  border: 1px solid var(--border);
+  color: var(--teal);
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 800; line-height: 1.1;
+  margin-bottom: 1.2rem;
+}
+.hero h1 em { color: var(--teal); font-style: normal; }
+.hero p { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin: 0 auto 1rem; line-height: 1.7; }
+
+/* ── TOGGLE ── */
+.toggle-wrap { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 2rem 0; }
+.toggle-label { color: var(--muted); font-size: 0.9rem; }
+.toggle-label.active { color: var(--white); font-weight: 600; }
+.toggle {
+  width: 52px; height: 28px; background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 100px; cursor: pointer; position: relative; transition: background .3s;
+}
+.toggle.on { background: var(--teal); }
+.toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; background: white; border-radius: 50%;
+  transition: transform .3s;
+}
+.toggle.on::after { transform: translateX(24px); }
+.save-tag { background: var(--amber); color: var(--navy); font-size: 0.72rem; font-weight: 700; padding: .2rem .6rem; border-radius: 100px; }
+
+/* ── PRICING CARDS ── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px; margin: 0 auto; padding: 0 5vw 5rem;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.2rem 2rem;
+  position: relative;
+  transition: transform .25s, box-shadow .25s;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.card.popular {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 1px var(--teal), 0 20px 60px rgba(0,180,166,0.15);
+}
+.popular-tag {
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+  background: var(--teal); color: var(--navy);
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  padding: .3rem 1rem; border-radius: 100px;
+}
+.card-icon { font-size: 2rem; margin-bottom: 1rem; }
+.card h3 { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: .4rem; }
+.card .subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.5; }
+.price-wrap { margin-bottom: 1.8rem; }
+.price { font-family: 'Syne', sans-serif; font-size: 2.6rem; font-weight: 800; color: var(--white); }
+.price sup { font-size: 1.2rem; vertical-align: super; }
+.price-period { color: var(--muted); font-size: 0.85rem; margin-left: .3rem; }
+.price-annual { display: none; }
+.features { list-style: none; margin-bottom: 2rem; }
+.features li {
+  padding: .55rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.9rem; color: #c8d8e4;
+  display: flex; align-items: center; gap: .7rem;
+}
+.features li:last-child { border-bottom: none; }
+.features li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+.features li.no::before { content: '✕'; color: #3a4f61; }
+.features li.no { color: #3a4f61; }
+.btn {
+  display: block; width: 100%; text-align: center;
+  padding: .85rem; border-radius: 8px;
+  font-weight: 600; font-size: 0.95rem;
+  text-decoration: none; cursor: pointer; border: none;
+  transition: all .2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-primary { background: var(--teal); color: var(--navy); }
+.btn-primary:hover { background: var(--teal-light); }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--white); }
+.btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+.btn-amber { background: var(--amber); color: var(--navy); }
+.btn-amber:hover { background: #ffb84d; }
+
+/* ── ONE-TIME SECTION ── */
+.onetime-section {
+  max-width: 900px; margin: 0 auto 5rem; padding: 0 5vw;
+}
+.onetime-section h2 {
+  font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700;
+  margin-bottom: .5rem;
+}
+.onetime-section p { color: var(--muted); margin-bottom: 2rem; }
+.onetime-card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 16px; padding: 2rem;
+  display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: space-between;
+}
+.onetime-info h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: .5rem; }
+.onetime-info p { color: var(--muted); font-size: 0.9rem; max-width: 420px; line-height: 1.6; }
+.onetime-price { text-align: center; }
+.onetime-price .big { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; color: var(--amber); }
+.onetime-price .note { color: var(--muted); font-size: 0.8rem; margin-top: .3rem; }
+.onetime-features { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.5rem; }
+.chip {
+  background: rgba(0,180,166,0.1); border: 1px solid var(--border);
+  color: var(--teal); font-size: 0.8rem; padding: .3rem .8rem; border-radius: 100px;
+}
+
+/* ── COMPARE TABLE ── */
+.compare-section {
+  max-width: 900px; margin: 0 auto 5rem; padding: 0 5vw;
+}
+.compare-section h2 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 2rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th { font-family: 'Syne', sans-serif; font-weight: 700; padding: .9rem 1rem; text-align: left; border-bottom: 2px solid var(--border); color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+td { padding: .85rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: #c8d8e4; }
+tr:last-child td { border-bottom: none; }
+.check { color: var(--teal); font-weight: 700; }
+.cross { color: #3a4f61; }
+td:first-child { font-weight: 500; color: var(--white); }
+
+/* ── CONTACT ── */
+.contact-section {
+  max-width: 700px; margin: 0 auto 6rem; padding: 0 5vw;
+}
+.contact-section h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: .5rem; }
+.contact-section > p { color: var(--muted); margin-bottom: 2.5rem; }
+.form-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+label { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+input, select, textarea {
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 8px; padding: .75rem 1rem;
+  color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+  outline: none; transition: border-color .2s;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--teal); }
+select option { background: var(--navy); }
+textarea { resize: vertical; min-height: 120px; }
+.form-submit { margin-top: .5rem; }
+.success-msg {
+  display: none; background: rgba(0,180,166,0.1); border: 1px solid var(--teal);
+  border-radius: 8px; padding: 1rem; text-align: center;
+  color: var(--teal); font-weight: 600; margin-top: 1rem;
+}
+
+/* ── FAQ ── */
+.faq-section { max-width: 700px; margin: 0 auto 6rem; padding: 0 5vw; }
+.faq-section h2 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 2rem; }
+.faq-item { border-bottom: 1px solid var(--border); padding: 1.2rem 0; cursor: pointer; }
+.faq-q { display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 0.95rem; }
+.faq-q span { color: var(--teal); font-size: 1.2rem; transition: transform .2s; }
+.faq-a { color: var(--muted); font-size: 0.9rem; line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height .3s, padding .3s; }
+.faq-item.open .faq-a { max-height: 200px; padding-top: .8rem; }
+.faq-item.open .faq-q span { transform: rotate(45deg); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 5vw; text-align: center;
+  color: var(--muted); font-size: 0.85rem;
+}
+footer a { color: var(--teal); text-decoration: none; }
+
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .onetime-card { flex-direction: column; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Jana<span>stra</span></div>
+  <div>
+    <a href="https://janastra.pages.dev">Home</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact" class="nav-cta">Get a Quote</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+  <div class="badge">Plans & Pricing</div>
+  <h1>Civic tech built for <em>every city</em></h1>
+  <p>Flexible plans for municipal bodies, NGOs, and housing societies. Start free, scale as your community grows.</p>
+</section>
+
+<!-- PRICING TOGGLE -->
+
+<div class="toggle-wrap" id="pricing">
+  <span class="toggle-label active" id="lbl-monthly">Monthly</span>
+  <div class="toggle" id="toggle" onclick="switchBilling()"></div>
+  <span class="toggle-label" id="lbl-annual">Annual <span class="save-tag">Save 20%</span></span>
+</div>
+
+<!-- PRICING CARDS -->
+
+<div class="pricing-grid">
+
+  <!-- Starter -->
+
+  <div class="card">
+    <div class="card-icon">🌱</div>
+    <h3>Starter</h3>
+    <p class="subtitle">For NGOs, RWAs & small housing societies getting started with citizen engagement.</p>
+    <div class="price-wrap">
+      <div class="price monthly-price"><sup>₹</sup>4,999<span class="price-period">/mo</span></div>
+      <div class="price annual-price" style="display:none"><sup>₹</sup>3,999<span class="price-period">/mo</span></div>
+    </div>
+    <ul class="features">
+      <li>Only 1 city / ward</li>
+      <li>Water, Civic & Traffic reports</li>
+      <li>Scam alert module</li>
+      <li>Unlimited citizen users</li>
+      <li>Healthcare locator module</li>
+      <li>Email support</li>
+      <li class="no">Custom branding</li>
+      <li class="no">API access</li>
+      <li class="no">Dedicated account manager</li>
+    </ul>
+    <a href="#contact" class="btn btn-outline">Get Started</a>
+  </div>
+
+  <!-- Pro (Popular) -->
+
+  <div class="card popular">
+    <div class="popular-tag">Most Popular</div>
+    <div class="card-icon">🏙️</div>
+    <h3>City Pro</h3>
+    <p class="subtitle">For municipalities and Smart City SPVs managing civic issues at scale.</p>
+    <div class="price-wrap">
+      <div class="price monthly-price"><sup>₹</sup>19,999<span class="price-period">/mo</span></div>
+      <div class="price annual-price" style="display:none"><sup>₹</sup>15,999<span class="price-period">/mo</span></div>
+    </div>
+    <ul class="features">
+      <li>Up to 5 cities / zones</li>
+      <li>All 6 reporting modules</li>
+      <li>Custom branding & domain</li>
+      <li>Unlimited citizen users</li>
+      <li>Healthcare locator module</li>
+      <li>Priority support (24hr)</li>
+      <li>API access</li>
+      <li class="no">Dedicated account manager</li>
+    </ul>
+    <a href="#contact" class="btn btn-primary">Get Started</a>
+  </div>
+
+  <!-- Enterprise -->
+
+  <div class="card">
+    <div class="card-icon">🏛️</div>
+    <h3>Government / Enterprise</h3>
+    <p class="subtitle">For state governments, large municipal corporations, and enterprise clients.</p>
+    <div class="price-wrap">
+      <div class="price" style="font-size:1.8rem; padding-top:.4rem;">Custom Pricing</div>
+    </div>
+    <ul class="features">
+      <li>Unlimited cities / districts</li>
+      <li>All modules + custom modules</li>
+      <li>White-label solution</li>
+      <li>GeM / tender compatible</li>
+      <li>Dedicated account manager</li>
+      <li>SLA guarantee</li>
+      <li>Full API + data export</li>
+      <li>On-premise option available</li>
+    </ul>
+    <a href="#contact" class="btn btn-amber">Contact Sales</a>
+  </div>
+
+</div>
+
+<!-- ONE-TIME LICENSE -->
+
+<div class="onetime-section">
+  <h2>Prefer a one-time license?</h2>
+  <p>Pay once, own the platform. Best for organizations that want full control without recurring costs.</p>
+  <div class="onetime-card">
+    <div class="onetime-info">
+      <h3>Perpetual License</h3>
+      <p>Get the complete Janastra platform with full source code, white-label rights, and 1 year of free updates and support. Deploy on your own infrastructure.</p>
+      <div class="onetime-features">
+        <span class="chip">Full source code</span>
+        <span class="chip">White-label rights</span>
+        <span class="chip">1 yr free support</span>
+        <span class="chip">Deploy anywhere</span>
+        <span class="chip">No recurring fees</span>
+      </div>
+    </div>
+    <div class="onetime-price">
+      <div class="big">₹1.2L</div>
+      <div class="note">One-time payment<br/>~₹1,20,000</div>
+      <a href="#contact" class="btn btn-amber" style="margin-top:1.2rem; min-width:160px;">Enquire Now</a>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE TABLE -->
+
+<div class="compare-section">
+  <h2>Compare plans</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Starter</th>
+        <th>City Pro</th>
+        <th>Enterprise</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cities / Zones</td><td>1</td><td>5</td><td>Unlimited</td></tr>
+      <tr><td>Citizen Users</td><td>500</td><td>Unlimited</td><td>Unlimited</td></tr>
+      <tr><td>Water & Civic Reports</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Traffic Updates</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Scam Alert Module</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Healthcare Locator</td><td class="cross">✕</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Custom Branding</td><td class="cross">✕</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>API Access</td><td class="cross">✕</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>White-label</td><td class="cross">✕</td><td class="cross">✕</td><td class="check">✓</td></tr>
+      <tr><td>GeM / Tender Support</td><td class="cross">✕</td><td class="cross">✕</td><td class="check">✓</td></tr>
+      <tr><td>Dedicated Manager</td><td class="cross">✕</td><td class="cross">✕</td><td class="check">✓</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CONTACT FORM -->
+
+<div class="contact-section" id="contact">
+  <h2>Get in touch</h2>
+  <p>Interested in Janastra for your city or organization? Fill in the form and we'll get back to you within 24 hours.</p>
+  <div class="form-card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="fname" placeholder="Ramesh Kumar" />
+      </div>
+      <div class="form-group">
+        <label>Organization *</label>
+        <input type="text" id="forg" placeholder="Delhi MCD / NGO Name" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" id="femail" placeholder="you@organization.in" />
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="tel" id="fphone" placeholder="+91 98765 43210" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Organization Type *</label>
+      <select id="ftype">
+        <option value="">Select type…</option>
+        <option>Municipal Corporation / Local Government</option>
+        <option>State Government</option>
+        <option>Smart City SPV</option>
+        <option>NGO / Civic Organization</option>
+        <option>Housing Society / RWA</option>
+        <option>Real Estate Developer</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Plan You're Interested In</label>
+      <select id="fplan">
+        <option value="">Select plan…</option>
+        <option>Starter (₹4,999/mo)</option>
+        <option>City Pro (₹19,999/mo)</option>
+        <option>Government / Enterprise (Custom)</option>
+        <option>One-Time License (₹1,20,000)</option>
+        <option>Not sure – need advice</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea id="fmsg" placeholder="Tell us about your city, the problems you want to solve, or any questions you have…"></textarea>
+    </div>
+    <button class="btn btn-primary form-submit" onclick="submitForm()">Send Inquiry →</button>
+    <div class="success-msg" id="success-msg">
+      ✓ Thank you! We'll reach out to you at <strong id="confirm-email"></strong> within 24 hours.
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+
+<div class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Can Janastra be white-labeled for our city's brand? <span>+</span></div>
+    <div class="faq-a">Yes! Our City Pro and Enterprise plans include full custom branding with your logo, colors, and even a custom domain (e.g., reports.yourcity.gov.in).</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Is Janastra listed on the GeM portal? <span>+</span></div>
+    <div class="faq-a">We are in the process of registering on GeM. For government and municipal clients, we can supply all necessary documentation for procurement and tendering. Contact us to discuss.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">What does the one-time license include? <span>+</span></div>
+    <div class="faq-a">The perpetual license includes complete source code, white-label rights, 1 year of free updates, and priority support. You can deploy it on your own servers with no ongoing fees.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Can we add custom modules for our specific needs? <span>+</span></div>
+    <div class="faq-a">Absolutely. Enterprise clients can request custom modules. We've built features like air quality monitoring, event reporting, and local vendor directories in the past.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Is there a free trial available? <span>+</span></div>
+    <div class="faq-a">Yes — we offer a 14-day free trial for the Starter and City Pro plans. No credit card required. Contact us to get started.</div>
+  </div>
+</div>
+
+<footer>
+  ©️ 2024 Janastra · Built for every community · <a href="mailto:scnv.co.associate@gmail.com">scnv.co.associate@gmail.com</a>
+</footer>
+
+<script>
+  let annual = false;
+
+  function switchBilling() {
+    annual = !annual;
+    document.getElementById('toggle').classList.toggle('on', annual);
+    document.getElementById('lbl-monthly').classList.toggle('active', !annual);
+    document.getElementById('lbl-annual').classList.toggle('active', annual);
+
+    document.querySelectorAll('.monthly-price').forEach(el => el.style.display = annual ? 'none' : 'block');
+    document.querySelectorAll('.annual-price').forEach(el => el.style.display = annual ? 'block' : 'none');
+  }
+
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+  }
+
+  function submitForm() {
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const org = document.getElementById('forg').value.trim();
+    const type = document.getElementById('ftype').value;
+
+    if (!name || !email || !org || !type) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    // Build mailto link
+    const plan = document.getElementById('fplan').value || 'Not specified';
+    const phone = document.getElementById('fphone').value || 'Not provided';
+    const msg = document.getElementById('fmsg').value || '';
+
+    const subject = encodeURIComponent(`Janastra Inquiry – ${org} (${type})`);
+    const body = encodeURIComponent(
+      `Name: ${name}\nOrganization: ${org}\nType: ${type}\nEmail: ${email}\nPhone: ${phone}\nPlan: ${plan}\n\nMessage:\n${msg}`
+    );
+
+    window.location.href = `mailto:scnv.co.associate@gmail.com?subject=${subject}&body=${body}`;
+
+    document.getElementById('confirm-email').textContent = email;
+    document.getElementById('success-msg').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
