@@ -379,8 +379,35 @@ async function updateGlobalStats() {
 
 function toggleMobileMenu() {
   const nav = document.querySelector('.nav');
-  if (nav) nav.classList.toggle('mobile-active');
+  const btn = document.querySelector('.mobile-menu-btn');
+
+  if (!nav) return;
+
+  const isOpen = nav.classList.contains('mobile-active');
+
+  if (isOpen) {
+    nav.classList.remove('mobile-active');
+    nav.style.display = '';
+    if (btn) btn.classList.remove('active');
+  } else {
+    if (!nav.querySelector('.mobile-org-link')) {
+      const orgLink = document.createElement('a');
+      orgLink.href = '/pricing.html';
+      orgLink.className = 'nav-link mobile-org-link';
+      orgLink.textContent = '🏛 For Organizations';
+      orgLink.style.cssText = 'color: #4f8ef7; font-weight: 600;';
+      nav.appendChild(orgLink);
+    }
+    nav.classList.add('mobile-active');
+    nav.style.cssText = `display:flex!important;flex-direction:column;position:fixed;top:64px;left:0;right:0;background:#0f172a;padding:1.5rem;gap:0.2rem;z-index:999;border-bottom:2px solid rgba(79,142,247,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.5);`;
+    nav.querySelectorAll('.nav-link').forEach(link => {
+      link.style.cssText = `display:block;padding:0.9rem 1rem;font-size:1rem;border-radius:8px;`;
+      link.addEventListener('click', () => { nav.classList.remove('mobile-active'); nav.style.display=''; }, { once: true });
+    });
+    if (btn) btn.classList.add('active');
+  }
 }
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
