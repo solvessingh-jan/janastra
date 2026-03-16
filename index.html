@@ -807,5 +807,26 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app-improved.js"></script>
+<button onclick="testDB()" style="position:fixed;bottom:20px;right:20px;padding:20px;background:red;color:white;z-index:9999;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;">TEST DB</button>
+
+<script>
+async function testDB() {
+  try {
+    const { createClient } = supabase;
+    const client = createClient('https://kjptsgmdnmjzrgetneiz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MjU4MjMsImV4cCI6MjA0NzQwMTgyM30.tK95wQr1Lf4mLJQSdWHVuQ_52Mag0');
+    
+    const { data, error } = await client.from('traffic_reports').insert([{
+      area: 'Test ' + new Date().getTime(),
+      condition: 'Heavy Traffic Jam',
+      timestamp: new Date().toISOString()
+    }]).select();
+    
+    if (error) alert('ERROR: ' + error.message);
+    else alert('SUCCESS! ' + JSON.stringify(data));
+  } catch (e) {
+    alert('FAIL: ' + e.message);
+  }
+}
+</script>
 </body>
 </html>
