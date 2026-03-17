@@ -383,6 +383,18 @@
               <option value="Good pressure">🔵 Good Pressure</option>
             </select>
           </div>
+          <div class="form-group">
+  <label for="water_phone" class="form-label">Your Phone Number *</label>
+  <input 
+    type="tel" 
+    id="water_phone" 
+    class="form-input" 
+    placeholder="e.g., 9876543210"
+    maxlength="10"
+    inputmode="numeric"
+    autocomplete="tel"
+  />
+</div>
           
           <button class="btn-primary btn-full" onclick="submitWater(this)">
             <span class="btn-text">Submit Water Report</span>
@@ -454,6 +466,18 @@
               placeholder="Please provide details about the issue..."
             ></textarea>
           </div>
+          <div class="form-group">
+  <label for="civic_phone" class="form-label">Your Phone Number *</label>
+  <input 
+    type="tel" 
+    id="civic_phone" 
+    class="form-input" 
+    placeholder="e.g., 9876543210"
+    maxlength="10"
+    inputmode="numeric"
+    autocomplete="tel"
+  />
+</div>
           
           <button class="btn-primary btn-full" onclick="submitCivic(this)">
             <span class="btn-text">Submit Civic Report</span>
@@ -655,6 +679,16 @@
                 placeholder="Describe the scam attempt (details help protect others)..."
               ></textarea>
             </div>
+            <div class="form-group">
+  <label for="scam_name" class="form-label">Your Name *</label>
+  <input 
+    type="text" 
+    id="scam_name" 
+    class="form-input" 
+    placeholder="e.g., Rajesh Kumar"
+  />
+  <p class="form-hint">Your name will be shown when others check this number</p>
+</div>
             
             <button class="btn-primary btn-full" onclick="submitScam(this)">
               <span class="btn-text">Report This Scam</span>
