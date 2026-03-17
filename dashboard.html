@@ -126,7 +126,7 @@
       <div id="waterTable" class="table-container">
         <table>
           <thead>
-            <tr><th>ID</th><th>Area</th><th>Status</th><th>Date/Time</th></tr>
+            <tr><th>ID</th><th>Area</th><th>Status</th><th>Phone</th><th>Date/Time</th></tr>
           </thead>
           <tbody id="waterData"></tbody>
         </table>
@@ -144,7 +144,7 @@
       <div id="civicTable" class="table-container" style="display:none;">
         <table>
           <thead>
-            <tr><th>ID</th><th>Area</th><th>Issue Type</th><th>Description</th><th>Date/Time</th></tr>
+            <tr><th>ID</th><th>Area</th><th>Issue Type</th><th>Description</th><th>Phone</th><th>Date/Time</th></tr>
           </thead>
           <tbody id="civicData"></tbody>
         </table>
@@ -153,7 +153,7 @@
       <div id="scamTable" class="table-container" style="display:none;">
         <table>
           <thead>
-            <tr><th>ID</th><th>Phone</th><th>Area</th><th>Type</th><th>Description</th><th>Date/Time</th></tr>
+           <tr><th>ID</th><th>Phone</th><th>Area</th><th>Type</th><th>Description</th><th>Reported By</th><th>Date/Time</th></tr>
           </thead>
           <tbody id="scamData"></tbody>
         </table>
@@ -211,28 +211,28 @@
     }
 
     function renderTable(type) {
-      const data = allData[type] || [];
-      let html = '';
+  const data = allData[type] || [];
+  let html = '';
 
-      if (data.length === 0) {
-        html = '<tr><td colspan="10" class="empty">No reports found</td></tr>';
-      } else {
-        data.forEach(row => {
-          const date = new Date(row.timestamp).toLocaleString();
-          if (type === 'water') {
-            html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.status}</td><td>${date}</td></tr>`;
-          } else if (type === 'traffic') {
-            html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.condition}</td><td>${date}</td></tr>`;
-          } else if (type === 'civic') {
-            html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.issue_type}</td><td>${row.description || 'N/A'}</td><td>${date}</td></tr>`;
-          } else if (type === 'scam') {
-            html += `<tr><td>${row.id}</td><td>${row.phone_number}</td><td>${row.area}</td><td>${row.scam_type}</td><td>${row.description || 'N/A'}</td><td>${date}</td></tr>`;
-          }
-        });
+  if (data.length === 0) {
+    html = '<tr><td colspan="10" class="empty">No reports found</td></tr>';
+  } else {
+    data.forEach(row => {
+      const date = new Date(row.timestamp).toLocaleString();
+      if (type === 'water') {
+        html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.status}</td><td>${row.phone_number || 'N/A'}</td><td>${date}</td></tr>`;
+      } else if (type === 'traffic') {
+        html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.condition}</td><td>${date}</td></tr>`;
+      } else if (type === 'civic') {
+        html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.issue_type}</td><td>${row.description || 'N/A'}</td><td>${row.phone_number || 'N/A'}</td><td>${date}</td></tr>`;
+      } else if (type === 'scam') {
+        html += `<tr><td>${row.id}</td><td>${row.phone_number}</td><td>${row.area}</td><td>${row.scam_type}</td><td>${row.description || 'N/A'}</td><td>${row.reporter_name || 'Anonymous'}</td><td>${date}</td></tr>`;
       }
+    });
+  }
 
-      document.getElementById(type + 'Data').innerHTML = html;
-    }
+  document.getElementById(type + 'Data').innerHTML = html;
+}
 
     function switchTab(type) {
       currentTab = type;
