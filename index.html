@@ -370,6 +370,7 @@
               class="form-input" 
               placeholder="e.g., Karol Bagh, Delhi"
               autocomplete="address-level2"
+              onchange="searchWaterReports()"
             />
           </div>
           
@@ -395,6 +396,18 @@
     autocomplete="tel"
   />
 </div>
+          <div class="form-group">
+  <label for="water_image" class="form-label">Upload Photo (Optional)</label>
+  <input 
+    type="file" 
+    id="water_image" 
+    class="form-input" 
+    accept="image/*"
+  />
+  <p class="form-hint">Max 5MB - JPG, PNG, or HEIC</p>
+</div>
+
+<div id="water_search_results" style="display: none;"></div>
           
           <button class="btn-primary btn-full" onclick="submitWater(this)">
             <span class="btn-text">Submit Water Report</span>
