@@ -106,20 +106,53 @@ async function submitWater(btn) {
     const area = document.getElementById('water_area').value.trim();
     const status = document.getElementById('water_status').value;
     const phone = document.getElementById('water_phone').value.trim();
+    const imageFile = document.getElementById('water_image')?.files[0];
+    
     const areaVal = validateArea(area);
     if (!areaVal.valid) throw new Error(areaVal.error);
     const phoneVal = validatePhone(phone);
     if (!phoneVal.valid) throw new Error(phoneVal.error);
-    await safeInsert('water_reports', { area, status, phone_number: phoneVal.cleaned, timestamp: new Date().toISOString() });
+    
+    // Upload image if present
+    let imageUrl = null;
+    if (imageFile) {
+      showToast('Uploading image...', 'info', 2000);
+      imageUrl = await uploadImage(imageFile);
+    }
+    
+    // Get user location
+    const location = await getUserLocation();
+    
+    await safeInsert('water_reports', { 
+      area, 
+      status, 
+      phone_number: phoneVal.cleaned, 
+      image_url: imageUrl,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      timestamp: new Date().toISOString() 
+    });
+    
     showToast(`✓ Water report submitted for ${area}!`, 'success');
     document.getElementById('water_area').value = '';
     document.getElementById('water_status').value = '';
     document.getElementById('water_phone').value = '';
+    if (document.getElementById('water_image')) document.getElementById('water_image').value = '';
+    document.getElementById('water_search_results').style.display = 'none';
     updateGlobalStats();
   } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
   finally { setButtonLoading(btn, false); }
 }
-
+async function searchWaterReports() {
+  const area = document.getElementById('water_area')?.value.trim();
+  if (!area || area.length < 3) {
+    document.getElementById('water_search_results').style.display = 'none';
+    return;
+  }
+  
+  const results = await searchReports('water_reports', area);
+  showSearchResults(results, 'water_search_results');
+}
 function viewWaterMap() {
   const map = document.getElementById('water_map');
   const iframe = document.getElementById('water_map_iframe');
