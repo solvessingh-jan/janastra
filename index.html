@@ -842,5 +842,57 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js?v=2"></script>
+<!-- Load Settings from Database -->
+<script>
+(async function loadSiteSettings() {
+  try {
+    const { createClient } = supabase;
+    const client = createClient('https://kjptsgmdnmjzrgetneiz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MjU4MjMsImV4cCI6MjA0NzQwMTgyM30.eyJhb0c6InNScHJjbTQxTzFKZFhCaFlmRnoyU3MxbkoxWjFJMWltdGNIUnpaMkl6WjJtbmVuSnpYUlJxWjF3aWNtOXNaU0k2SW1GdWIyNGlMQ0pwWVhRaU9qRTNNekU0TWpVNE1qTXNJbVY0Y0NJNk1qQTBOelF3TVRneU0zMC50Szk1d1FyMUxmNG1MSllTZFdIVnVRXzUyTWFnMA==');
+    
+    const { data } = await client.from('site_settings').select('*');
+    if (!data) return;
+    
+    data.forEach(setting => {
+      // Hide/show features
+      if (setting.key === 'features_enabled') {
+        const features = setting.value;
+        if (!features.water) document.querySelector('[data-category="water"]')?.remove();
+        if (!features.traffic) document.querySelector('[data-category="traffic"]')?.remove();
+        if (!features.civic) document.querySelector('[data-category="civic"]')?.remove();
+        if (!features.scam) document.querySelector('[data-category="scam"]')?.remove();
+        if (!features.healthcare) document.querySelector('[data-category="clinics"]')?.remove();
+      }
+      
+      // Update civic issue types dropdown
+      if (setting.key === 'issue_types_civic') {
+        const select = document.getElementById('civic_issue');
+        if (select) {
+          select.innerHTML = '<option value="">Select issue type</option>' + 
+            setting.value.map(type => `<option value="${type}">${type}</option>`).join('');
+        }
+      }
+      
+      // Update scam types dropdown
+      if (setting.key === 'issue_types_scam') {
+        const select = document.getElementById('scam_type');
+        if (select) {
+          select.innerHTML = '<option value="">Select scam type</option>' + 
+            setting.value.map(type => `<option value="${type}">${type}</option>`).join('');
+        }
+      }
+      
+      // Update hero title
+      if (setting.key === 'hero_title') {
+        const heroTitle = document.querySelector('.hero-title .gradient-text');
+        if (heroTitle && setting.value) {
+          heroTitle.textContent = setting.value;
+        }
+      }
+    });
+  } catch (e) {
+    console.error('Settings load error:', e);
+  }
+})();
+</script>
 </body>
 </html>
