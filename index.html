@@ -543,6 +543,7 @@
               class="form-input" 
               placeholder="e.g., Ring Road, Delhi"
               autocomplete="address-level2"
+              onchange="searchTrafficReports()"
             />
           </div>
           
@@ -558,6 +559,18 @@
               <option value="Free flowing">🟢 Free Flowing</option>
             </select>
           </div>
+          <div class="form-group">
+  <label for="traffic_image" class="form-label">Upload Photo (Optional)</label>
+  <input 
+    type="file" 
+    id="traffic_image" 
+    class="form-input" 
+    accept="image/*"
+  />
+  <p class="form-hint">Max 5MB - JPG, PNG, or HEIC</p>
+          </div>
+
+<div id="traffic_search_results" style="display: none;"></div>
           
           <button class="btn-primary btn-full" onclick="submitTraffic(this)">
             <span class="btn-text">Submit Traffic Report</span>
