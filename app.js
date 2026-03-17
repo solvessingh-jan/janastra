@@ -186,19 +186,54 @@ async function submitCivic(btn) {
     const issue = document.getElementById('civic_issue').value;
     const desc = document.getElementById('civic_desc').value.trim();
     const phone = document.getElementById('civic_phone').value.trim();
+    const imageFile = document.getElementById('civic_image')?.files[0];
+    
     const areaVal = validateArea(area);
     if (!areaVal.valid) throw new Error(areaVal.error);
     const phoneVal = validatePhone(phone);
     if (!phoneVal.valid) throw new Error(phoneVal.error);
-    await safeInsert('civic_reports', { area, issue_type: issue, description: desc || 'No details', phone_number: phoneVal.cleaned, timestamp: new Date().toISOString() });
+    
+    // Upload image if present
+    let imageUrl = null;
+    if (imageFile) {
+      showToast('Uploading image...', 'info', 2000);
+      imageUrl = await uploadImage(imageFile);
+    }
+    
+    // Get user location
+    const location = await getUserLocation();
+    
+    await safeInsert('civic_reports', { 
+      area, 
+      issue_type: issue, 
+      description: desc || 'No details', 
+      phone_number: phoneVal.cleaned,
+      image_url: imageUrl,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      timestamp: new Date().toISOString() 
+    });
+    
     showToast(`✓ Civic report submitted for ${area}!`, 'success');
     document.getElementById('civic_area').value = '';
     document.getElementById('civic_issue').value = '';
     document.getElementById('civic_desc').value = '';
     document.getElementById('civic_phone').value = '';
+    if (document.getElementById('civic_image')) document.getElementById('civic_image').value = '';
+    document.getElementById('civic_search_results').style.display = 'none';
     updateGlobalStats();
   } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
   finally { setButtonLoading(btn, false); }
+}
+async function searchCivicReports() {
+  const area = document.getElementById('civic_area')?.value.trim();
+  if (!area || area.length < 3) {
+    document.getElementById('civic_search_results').style.display = 'none';
+    return;
+  }
+  
+  const results = await searchReports('civic_reports', area);
+  showSearchResults(results, 'civic_search_results');
 }
 
 function viewCivicMap() {
