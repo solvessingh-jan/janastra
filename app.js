@@ -376,7 +376,101 @@ async function updateGlobalStats() {
     animateValue('hero-stat-3', 0, 3420, 2000);
   }
 }
+// Image Upload Function
+async function uploadImage(file) {
+  try {
+    if (!file) return null;
+    
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('Image too large (max 5MB)');
+    }
+    
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Please upload an image file');
+    }
+    
+    // Create unique filename
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    
+    // Upload to Supabase Storage
+    const { data, error } = await supabaseClient.storage
+      .from('report-images')
+      .upload(fileName, file);
+    
+    if (error) throw error;
+    
+    // Get public URL
+    const { data: urlData } = supabaseClient.storage
+      .from('report-images')
+      .getPublicUrl(fileName);
+    
+    return urlData.publicUrl;
+  } catch (e) {
+    console.error('Upload error:', e);
+    throw e;
+  }
+}
 
+// Get user location
+function getUserLocation() {
+  return new Promise((resolve) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        () => {
+          resolve({ latitude: 28.6139, longitude: 77.2090 }); // Default: Delhi
+        }
+      );
+    } else {
+      resolve({ latitude: 28.6139, longitude: 77.2090 }); // Default: Delhi
+    }
+  });
+}
+
+// Search existing reports
+async function searchReports(table, area) {
+  try {
+    const { data } = await supabaseClient
+      .from(table)
+      .select('*')
+      .ilike('area', `%${area}%`)
+      .order('timestamp', { ascending: false })
+      .limit(5);
+    
+    return data || [];
+  } catch (e) {
+    console.error('Search error:', e);
+    return [];
+  }
+}
+
+// Show search results
+function showSearchResults(results, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  
+  if (results.length === 0) {
+    container.innerHTML = '<p style="color: #10b981; padding: 12px; background: #d1fae5; border-radius: 6px; margin-top: 8px;">✓ No similar reports found in this area</p>';
+  } else {
+    let html = '<div style="background: #fef3c7; padding: 12px; border-radius: 6px; margin-top: 8px;"><p style="font-weight: 600; margin-bottom: 8px;">⚠️ Similar reports found:</p><ul style="margin: 0; padding-left: 20px;">';
+    results.forEach(r => {
+      const date = new Date(r.timestamp).toLocaleDateString();
+      const status = r.status || 'Pending';
+      html += `<li style="margin: 4px 0;"><strong>${r.area}</strong> - ${status} (${date})</li>`;
+    });
+    html += '</ul></div>';
+    container.innerHTML = html;
+  }
+  container.style.display = 'block';
+}
 function toggleMobileMenu() {
   const nav = document.querySelector('.nav');
   const btn = document.querySelector('.mobile-menu-btn');
