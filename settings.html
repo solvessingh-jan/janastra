@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Janastra - Admin Settings</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; }
+    
+    .login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
+    .login-box h1 { font-size: 24px; margin-bottom: 8px; }
+    .login-box input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 16px; font-size: 16px; }
+    .login-box button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+    .error { color: #ef4444; font-size: 14px; margin-top: -8px; margin-bottom: 16px; }
+    
+    .settings { display: none; }
+    .header { background: white; border-bottom: 1px solid #e2e8f0; padding: 20px; }
+    .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logout-btn { padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .section { background: white; padding: 24px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .section h2 { font-size: 20px; margin-bottom: 16px; color: #1e293b; }
+    
+    .toggle-group { display: flex; flex-direction: column; gap: 12px; }
+    .toggle-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 8px; }
+    .toggle-item label { font-weight: 500; }
+    .switch { position: relative; width: 50px; height: 26px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 26px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #2563eb; }
+    input:checked + .slider:before { transform: translateX(24px); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-weight: 500; margin-bottom: 8px; color: #475569; }
+    .input-group input, .input-group textarea { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; }
+    .input-group textarea { resize: vertical; min-height: 80px; }
+    
+    .list-editor { display: flex; flex-direction: column; gap: 8px; }
+    .list-item { display: flex; gap: 8px; align-items: center; }
+    .list-item input { flex: 1; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; }
+    .list-item button { padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .add-btn { padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px; }
+    
+    .save-btn { width: 100%; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 24px; }
+    .save-btn:hover { background: #1d4ed8; }
+    
+    .success-msg { background: #10b981; color: white; padding: 12px; border-radius: 8px; margin-bottom: 16px; display: none; }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-box">
+      <h1>🔧 Admin Settings</h1>
+      <p style="color: #64748b; margin-bottom: 24px;">Authorized Access Only</p>
+      <input type="password" id="passwordInput" placeholder="Enter admin password" />
+      <div id="loginError" class="error" style="display:none;">Incorrect password</div>
+      <button onclick="login()">Access Settings</button>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settings" class="settings">
+    <div class="header">
+      <div class="header-content">
+        <h1>🔧 Janastra Admin Settings</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="successMsg" class="success-msg">✓ Settings saved successfully!</div>
+
+      <!-- Features Toggle -->
+      <div class="section">
+        <h2>Enable/Disable Features</h2>
+        <div class="toggle-group">
+          <div class="toggle-item">
+            <label>💧 Water Reports</label>
+            <label class="switch">
+              <input type="checkbox" id="feature_water" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <label>🚦 Traffic Reports</label>
+            <label class="switch">
+              <input type="checkbox" id="feature_traffic" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <label>🏠 Civic Issues</label>
+            <label class="switch">
+              <input type="checkbox" id="feature_civic" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <label>🚨 Scam Alert</label>
+            <label class="switch">
+              <input type="checkbox" id="feature_scam" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <label>🏥 Healthcare</label>
+            <label class="switch">
+              <input type="checkbox" id="feature_healthcare" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Civic Issue Types -->
+      <div class="section">
+        <h2>Civic Issue Types</h2>
+        <div class="list-editor" id="civicList"></div>
+        <button class="add-btn" onclick="addCivicType()">+ Add New Type</button>
+      </div>
+
+      <!-- Scam Types -->
+      <div class="section">
+        <h2>Scam Types</h2>
+        <div class="list-editor" id="scamList"></div>
+        <button class="add-btn" onclick="addScamType()">+ Add New Type</button>
+      </div>
+
+      <!-- Text Content -->
+      <div class="section">
+        <h2>Website Content</h2>
+        <div class="input-group">
+          <label>Hero Title</label>
+          <input type="text" id="hero_title" placeholder="Your Voice, Your City" />
+        </div>
+        <div class="input-group">
+          <label>Contact Email</label>
+          <input type="email" id="contact_email" placeholder="admin@janastra.com" />
+        </div>
+        <div class="input-group">
+          <label>Dashboard Password</label>
+          <input type="text" id="dashboard_password" placeholder="janastra2024" />
+        </div>
+      </div>
+
+      <button class="save-btn" onclick="saveSettings()">💾 Save All Settings</button>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjQ2NzEsImV4cCI6MjA4MjcwMDY3MX0.g5NA4Anqj9j0urX2oMtU2WDL4mtFDkI2WhV27iN-Jko';
+    const ADMIN_PASSWORD = 'admin2026';
+    
+    const { createClient } = supabase;
+    const client = createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    let civicTypes = [];
+    let scamTypes = [];
+
+    function login() {
+      const pwd = document.getElementById('passwordInput').value;
+      if (pwd === ADMIN_PASSWORD) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('settings').style.display = 'block';
+        loadSettings();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    function logout() {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('settings').style.display = 'none';
+      document.getElementById('passwordInput').value = '';
+    }
+
+    async function loadSettings() {
+      try {
+        const { data } = await client.from('site_settings').select('*');
+        if (!data) return;
+
+        data.forEach(setting => {
+          if (setting.key === 'features_enabled') {
+            const features = setting.value;
+            document.getElementById('feature_water').checked = features.water;
+            document.getElementById('feature_traffic').checked = features.traffic;
+            document.getElementById('feature_civic').checked = features.civic;
+            document.getElementById('feature_scam').checked = features.scam;
+            document.getElementById('feature_healthcare').checked = features.healthcare;
+          } else if (setting.key === 'issue_types_civic') {
+            civicTypes = setting.value;
+            renderCivicList();
+          } else if (setting.key === 'issue_types_scam') {
+            scamTypes = setting.value;
+            renderScamList();
+          } else if (setting.key === 'hero_title') {
+            document.getElementById('hero_title').value = setting.value;
+          } else if (setting.key === 'contact_email') {
+            document.getElementById('contact_email').value = setting.value;
+          } else if (setting.key === 'dashboard_password') {
+            document.getElementById('dashboard_password').value = setting.value;
+          }
+        });
+      } catch (e) {
+        console.error('Load error:', e);
+      }
+    }
+
+    function renderCivicList() {
+      const html = civicTypes.map((type, i) => `
+        <div class="list-item">
+          <input type="text" value="${type}" onchange="updateCivicType(${i}, this.value)" />
+          <button onclick="removeCivicType(${i})">✕</button>
+        </div>
+      `).join('');
+      document.getElementById('civicList').innerHTML = html;
+    }
+
+    function renderScamList() {
+      const html = scamTypes.map((type, i) => `
+        <div class="list-item">
+          <input type="text" value="${type}" onchange="updateScamType(${i}, this.value)" />
+          <button onclick="removeScamType(${i})">✕</button>
+        </div>
+      `).join('');
+      document.getElementById('scamList').innerHTML = html;
+    }
+
+    function addCivicType() {
+      civicTypes.push('New Issue Type');
+      renderCivicList();
+    }
+
+    function addScamType() {
+      scamTypes.push('New Scam Type');
+      renderScamList();
+    }
+
+    function updateCivicType(i, value) {
+      civicTypes[i] = value;
+    }
+
+    function updateScamType(i, value) {
+      scamTypes[i] = value;
+    }
+
+    function removeCivicType(i) {
+      civicTypes.splice(i, 1);
+      renderCivicList();
+    }
+
+    function removeScamType(i) {
+      scamTypes.splice(i, 1);
+      renderScamList();
+    }
+
+    async function saveSettings() {
+      try {
+        const features = {
+          water: document.getElementById('feature_water').checked,
+          traffic: document.getElementById('feature_traffic').checked,
+          civic: document.getElementById('feature_civic').checked,
+          scam: document.getElementById('feature_scam').checked,
+          healthcare: document.getElementById('feature_healthcare').checked
+        };
+
+        await client.from('site_settings').upsert({ key: 'features_enabled', value: features });
+        await client.from('site_settings').upsert({ key: 'issue_types_civic', value: civicTypes });
+        await client.from('site_settings').upsert({ key: 'issue_types_scam', value: scamTypes });
+        await client.from('site_settings').upsert({ key: 'hero_title', value: document.getElementById('hero_title').value });
+        await client.from('site_settings').upsert({ key: 'contact_email', value: document.getElementById('contact_email').value });
+        await client.from('site_settings').upsert({ key: 'dashboard_password', value: document.getElementById('dashboard_password').value });
+
+        document.getElementById('successMsg').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('successMsg').style.display = 'none';
+        }, 3000);
+      } catch (e) {
+        alert('Error saving: ' + e.message);
+      }
+    }
+
+    document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') login();
+    });
+  </script>
+</body>
+</html>
