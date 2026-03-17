@@ -454,6 +454,7 @@
               class="form-input" 
               placeholder="e.g., Connaught Place, Delhi"
               autocomplete="address-level2"
+              onchange="searchCivicReports()"
             />
           </div>
           
@@ -491,6 +492,18 @@
     autocomplete="tel"
   />
 </div>
+          <div class="form-group">
+  <label for="civic_image" class="form-label">Upload Photo (Optional)</label>
+  <input 
+    type="file" 
+    id="civic_image" 
+    class="form-input" 
+    accept="image/*"
+  />
+  <p class="form-hint">Max 5MB - JPG, PNG, or HEIC</p>
+</div>
+
+<div id="civic_search_results" style="display: none;"></div>
           
           <button class="btn-primary btn-full" onclick="submitCivic(this)">
             <span class="btn-text">Submit Civic Report</span>
