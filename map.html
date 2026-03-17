@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Janastra - Live Reports Map</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    
+    .header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 20px; color: #1e293b; }
+    .back-btn { padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 6px; text-decoration: none; }
+    
+    .filter-bar { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .filter-btn { padding: 8px 16px; border: 1px solid #e2e8f0; background: white; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .filter-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+    
+    #map { height: calc(100vh - 120px); width: 100%; }
+    
+    .popup-content { min-width: 200px; }
+    .popup-content h3 { margin-bottom: 8px; color: #1e293b; }
+    .popup-content p { margin: 4px 0; font-size: 14px; color: #64748b; }
+    .popup-status { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-top: 8px; }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-progress { background: #dbeafe; color: #1e40af; }
+    .status-resolved { background: #d1fae5; color: #065f46; }
+    .popup-image { width: 100%; max-width: 200px; margin-top: 8px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🗺️ Live Reports Map</h1>
+    <a href="/" class="back-btn">← Back to Home</a>
+  </div>
+  
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCategory('all')">All Reports</button>
+    <button class="filter-btn" onclick="filterCategory('water')">💧 Water</button>
+    <button class="filter-btn" onclick="filterCategory('traffic')">🚦 Traffic</button>
+    <button class="filter-btn" onclick="filterCategory('civic')">🏠 Civic</button>
+    <button class="filter-btn" onclick="filterCategory('scam')">🚨 Scam</button>
+  </div>
+  
+  <div id="map"></div>
+
+  <script>
+    const SUPABASE_URL = 'https://kjptsgmdnmjzrgetneiz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjQ2NzEsImV4cCI6MjA4MjcwMDY3MX0.g5NA4Anqj9j0urX2oMtU2WDL4mtFDkI2WhV27iN-Jko';
+    
+    const { createClient } = supabase;
+    const client = createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    // Initialize map (centered on Delhi)
+    const map = L.map('map').setView([28.6139, 77.2090], 12);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    const markers = {
+      water: [],
+      traffic: [],
+      civic: [],
+      scam: []
+    };
+    
+    const colors = {
+      water: '#3b82f6',
+      traffic: '#f59e0b',
+      civic: '#8b5cf6',
+      scam: '#ef4444'
+    };
+    
+    let currentFilter = 'all';
+    
+    async function loadReports() {
+      try {
+        // Load water reports
+        const { data: water } = await client.from('water_reports').select('*').not('latitude', 'is', null);
+        if (water) water.forEach(r => addMarker('water', r));
+        
+        // Load traffic reports
+        const { data: traffic } = await client.from('traffic_reports').select('*').not('latitude', 'is', null);
+        if (traffic) traffic.forEach(r => addMarker('traffic', r));
+        
+        // Load civic reports
+        const { data: civic } = await client.from('civic_reports').select('*').not('latitude', 'is', null);
+        if (civic) civic.forEach(r => addMarker('civic', r));
+        
+      } catch (e) {
+        console.error('Load error:', e);
+      }
+    }
+    
+    function addMarker(category, report) {
+      if (!report.latitude || !report.longitude) return;
+      
+      const icon = L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="background: ${colors[category]}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`
+      });
+      
+      const statusClass = report.status === 'Resolved' ? 'status-resolved' : report.status === 'In Progress' ? 'status-progress' : 'status-pending';
+      
+      const popupContent = `
+        <div class="popup-content">
+          <h3>${category.charAt(0).toUpperCase() + category.slice(1)} Report</h3>
+          <p><strong>Area:</strong> ${report.area}</p>
+          <p><strong>Details:</strong> ${report.status || report.condition || report.issue_type || 'N/A'}</p>
+          <p><strong>Date:</strong> ${new Date(report.timestamp).toLocaleDateString()}</p>
+          ${report.image_url ? `<img src="${report.image_url}" class="popup-image" />` : ''}
+          <span class="popup-status ${statusClass}">${report.status || 'Pending'}</span>
+        </div>
+      `;
+      
+      const marker = L.marker([report.latitude, report.longitude], { icon })
+        .bindPopup(popupContent)
+        .addTo(map);
+      
+      markers[category].push(marker);
+    }
+    
+    function filterCategory(category) {
+      currentFilter = category;
+      
+      // Update button states
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Show/hide markers
+      Object.keys(markers).forEach(cat => {
+        markers[cat].forEach(marker => {
+          if (category === 'all' || category === cat) {
+            marker.addTo(map);
+          } else {
+            map.removeLayer(marker);
+          }
+        });
+      });
+    }
+    
+    loadReports();
+  </script>
+</body>
+</html>
