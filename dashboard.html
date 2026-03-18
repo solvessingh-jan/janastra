@@ -327,6 +327,26 @@
     document.getElementById('passwordInput').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') login();
     });
+    
+    async function updateStatus(table, id, newStatus) {
+  try {
+    const { error } = await supabaseClient
+      .from(table)
+      .update({ status: newStatus })
+      .eq('id', id);
+    
+    if (error) throw error;
+    
+    // Show success message
+    alert(`✓ Status updated to: ${newStatus}`);
+    
+    // Reload data to reflect changes
+    loadAllData();
+  } catch (e) {
+    console.error('Update error:', e);
+    alert('Failed to update status: ' + e.message);
+  }
+}
   </script>
 </body>
 </html>
