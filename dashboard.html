@@ -213,24 +213,88 @@
     function renderTable(type) {
   const data = allData[type] || [];
   let html = '';
-
   if (data.length === 0) {
     html = '<tr><td colspan="10" class="empty">No reports found</td></tr>';
   } else {
     data.forEach(row => {
       const date = new Date(row.timestamp).toLocaleString();
+      const status = row.status || 'Pending';
+      const statusColor = status === 'Resolved' ? '#10b981' : status === 'In Progress' ? '#3b82f6' : '#f59e0b';
+      const imageHtml = row.image_url ? `<a href="${row.image_url}" target="_blank" style="color: #3b82f6;">📷 View</a>` : 'No image';
+      
       if (type === 'water') {
-        html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.status}</td><td>${row.phone_number || 'N/A'}</td><td>${date}</td></tr>`;
+        html += `<tr>
+          <td>${row.id}</td>
+          <td>${row.area}</td>
+          <td>${row.status || 'N/A'}</td>
+          <td>${row.phone_number || 'N/A'}</td>
+          <td>${imageHtml}</td>
+          <td style="color: ${statusColor}; font-weight: 600;">${status}</td>
+          <td>
+            <select onchange="updateStatus('water_reports', ${row.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+              <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Resolved" ${status === 'Resolved' ? 'selected' : ''}>Resolved</option>
+            </select>
+          </td>
+          <td>${date}</td>
+        </tr>`;
       } else if (type === 'traffic') {
-        html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.condition}</td><td>${date}</td></tr>`;
+        html += `<tr>
+          <td>${row.id}</td>
+          <td>${row.area}</td>
+          <td>${row.condition}</td>
+          <td>${imageHtml}</td>
+          <td style="color: ${statusColor}; font-weight: 600;">${status}</td>
+          <td>
+            <select onchange="updateStatus('traffic_reports', ${row.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+              <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Resolved" ${status === 'Resolved' ? 'selected' : ''}>Resolved</option>
+            </select>
+          </td>
+          <td>${date}</td>
+        </tr>`;
       } else if (type === 'civic') {
-        html += `<tr><td>${row.id}</td><td>${row.area}</td><td>${row.issue_type}</td><td>${row.description || 'N/A'}</td><td>${row.phone_number || 'N/A'}</td><td>${date}</td></tr>`;
+        html += `<tr>
+          <td>${row.id}</td>
+          <td>${row.area}</td>
+          <td>${row.issue_type}</td>
+          <td>${row.description || 'N/A'}</td>
+          <td>${row.phone_number || 'N/A'}</td>
+          <td>${imageHtml}</td>
+          <td style="color: ${statusColor}; font-weight: 600;">${status}</td>
+          <td>
+            <select onchange="updateStatus('civic_reports', ${row.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+              <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Resolved" ${status === 'Resolved' ? 'selected' : ''}>Resolved</option>
+            </select>
+          </td>
+          <td>${date}</td>
+        </tr>`;
       } else if (type === 'scam') {
-        html += `<tr><td>${row.id}</td><td>${row.phone_number}</td><td>${row.area}</td><td>${row.scam_type}</td><td>${row.description || 'N/A'}</td><td>${row.reporter_name || 'Anonymous'}</td><td>${date}</td></tr>`;
+        html += `<tr>
+          <td>${row.id}</td>
+          <td>${row.phone_number}</td>
+          <td>${row.area}</td>
+          <td>${row.scam_type}</td>
+          <td>${row.description || 'N/A'}</td>
+          <td>${row.reporter_name || 'Anonymous'}</td>
+          <td>${imageHtml}</td>
+          <td style="color: ${statusColor}; font-weight: 600;">${status}</td>
+          <td>
+            <select onchange="updateStatus('scam_reports', ${row.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+              <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Resolved" ${status === 'Resolved' ? 'selected' : ''}>Resolved</option>
+            </select>
+          </td>
+          <td>${date}</td>
+        </tr>`;
       }
     });
   }
-
   document.getElementById(type + 'Data').innerHTML = html;
 }
 
