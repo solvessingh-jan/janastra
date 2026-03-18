@@ -167,7 +167,7 @@
     const PASSWORD = 'Jan93168123'; // Change this to your secure password
     
     const { createClient } = supabase;
-    const client = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     let currentTab = 'water';
     let allData = {};
 
