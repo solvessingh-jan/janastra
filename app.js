@@ -249,20 +249,53 @@ function viewCivicMap() {
 }
 
 async function submitTraffic(btn) {
-  if (!validateForm({ 'traffic_area': 'location', 'traffic_issue': 'condition' })) return;
+  if (!validateForm({ 'traffic_area': 'area', 'traffic_issue': 'condition' })) return;
   setButtonLoading(btn, true);
   try {
     const area = document.getElementById('traffic_area').value.trim();
     const condition = document.getElementById('traffic_issue').value;
+    const imageFile = document.getElementById('traffic_image')?.files[0];
+    
     const areaVal = validateArea(area);
     if (!areaVal.valid) throw new Error(areaVal.error);
-    await safeInsert('traffic_reports', { area, condition, timestamp: new Date().toISOString() });
-    showToast(`✓ Traffic reported for ${area}!`, 'success');
+    
+    // Upload image if present
+    let imageUrl = null;
+    if (imageFile) {
+      showToast('Uploading image...', 'info', 2000);
+      imageUrl = await uploadImage(imageFile);
+    }
+    
+    // Get user location
+    const location = await getUserLocation();
+    
+    await safeInsert('traffic_reports', { 
+      area, 
+      condition, 
+      image_url: imageUrl,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      timestamp: new Date().toISOString() 
+    });
+    
+    showToast(`✓ Traffic report submitted for ${area}!`, 'success');
     document.getElementById('traffic_area').value = '';
     document.getElementById('traffic_issue').value = '';
+    if (document.getElementById('traffic_image')) document.getElementById('traffic_image').value = '';
+    document.getElementById('traffic_search_results').style.display = 'none';
     updateGlobalStats();
   } catch (e) { showToast(e.message || 'Submit failed', 'error', 6000); }
   finally { setButtonLoading(btn, false); }
+}
+async function searchTrafficReports() {
+  const area = document.getElementById('traffic_area')?.value.trim();
+  if (!area || area.length < 3) {
+    document.getElementById('traffic_search_results').style.display = 'none';
+    return;
+  }
+  
+  const results = await searchReports('traffic_reports', area);
+  showSearchResults(results, 'traffic_search_results');
 }
 
 function viewLiveTraffic() {
