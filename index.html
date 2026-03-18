@@ -887,7 +887,7 @@
 (async function loadSiteSettings() {
   try {
     const { createClient } = supabase;
-    const client = createClient('https://kjptsgmdnmjzrgetneiz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MjU4MjMsImV4cCI6MjA0NzQwMTgyM30.eyJhb0c6InNScHJjbTQxTzFKZFhCaFlmRnoyU3MxbkoxWjFJMWltdGNIUnpaMkl6WjJtbmVuSnpYUlJxWjF3aWNtOXNaU0k2SW1GdWIyNGlMQ0pwWVhRaU9qRTNNekU0TWpVNE1qTXNJbVY0Y0NJNk1qQTBOelF3TVRneU0zMC50Szk1d1FyMUxmNG1MSllTZFdIVnVRXzUyTWFnMA==');
+    const client = createClient('https://kjptsgmdnmjzrgetneiz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcHRzZ21kbm1qenJnZXRuZWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjQ2NzEsImV4cCI6MjA4MjcwMDY3MX0.g5NA4Anqj9j0urX2oMtU2WDL4mtFDkI2WhV27iN-Jko');
     
     const { data } = await client.from('site_settings').select('*');
     if (!data) return;
